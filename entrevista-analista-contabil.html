@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrevista — Analista Contábil Pleno · Outtax</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root {
+  --bg: #09100f;
+  --surface: #0e1512;
+  --card: #131d1a;
+  --card2: #192320;
+  --border: #1e2e2a;
+  --border2: #28403a;
+  --accent: #2dd4a0;
+  --accent2: #1a9e78;
+  --gold: #f0b429;
+  --blue: #3d7fff;
+  --red: #f87171;
+  --orange: #fb923c;
+  --text: #e0ede9;
+  --muted: #435550;
+  --soft: #7a9e96;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+.app { display:flex; min-height:100vh; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 272px; flex-shrink:0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display:flex; flex-direction:column;
+  position:sticky; top:0; height:100vh;
+  overflow-y:auto;
+}
+.sidebar-logo {
+  padding: 26px 22px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-tag {
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent); margin-bottom:4px;
+}
+.logo-title { font-family:'Syne',sans-serif; font-size:17px; font-weight:800; color:#fff; line-height:1.25; }
+.logo-sub { font-size:11px; color:var(--soft); margin-top:3px; }
+
+.sidebar-nav { flex:1; padding:14px 10px; display:flex; flex-direction:column; gap:3px; }
+.nav-section-label {
+  font-family:'Syne',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--muted); padding:10px 8px 5px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:9px;
+  padding:8px 11px; border-radius:8px; cursor:pointer;
+  transition:all 0.15s; font-size:12.5px; color:var(--soft);
+  text-decoration:none; border:1px solid transparent;
+}
+.nav-item:hover { background:var(--card); color:var(--text); }
+.nav-item.active { background:rgba(45,212,160,0.08); color:var(--accent); border-color:rgba(45,212,160,0.15); }
+.nav-icon { font-size:13px; flex-shrink:0; }
+.nav-progress {
+  width:17px; height:17px; border-radius:50%;
+  border:2px solid var(--border2); margin-left:auto; flex-shrink:0;
+  position:relative; transition:all 0.3s;
+}
+.nav-progress.done { background:var(--accent); border-color:var(--accent); }
+.nav-progress.done::after {
+  content:'✓'; position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; color:#000; font-weight:900;
+}
+.sidebar-footer { padding:14px 10px; border-top:1px solid var(--border); }
+.btn-pdf {
+  width:100%; padding:11px;
+  background:linear-gradient(135deg, var(--accent), var(--accent2));
+  color:#000; border:none; border-radius:10px;
+  font-family:'Syne',sans-serif; font-size:12px; font-weight:800;
+  letter-spacing:0.5px; cursor:pointer;
+  transition:opacity 0.2s, transform 0.1s;
+  display:flex; align-items:center; justify-content:center; gap:7px;
+}
+.btn-pdf:hover { opacity:0.88; transform:translateY(-1px); }
+.btn-pdf:disabled { opacity:0.35; cursor:not-allowed; transform:none; }
+
+/* MAIN */
+.main { flex:1; padding:40px 48px 80px; max-width:860px; }
+
+/* HEADER FORM */
+.header-form {
+  margin-bottom:44px; padding-bottom:32px;
+  border-bottom:1px solid var(--border);
+  animation:fadeDown 0.5s ease both;
+}
+.header-tag {
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent); margin-bottom:8px;
+  display:flex; align-items:center; gap:8px;
+}
+.header-tag::before { content:''; width:20px; height:2px; background:var(--accent); display:inline-block; }
+.header-form h1 { font-family:'Syne',sans-serif; font-size:30px; font-weight:800; color:#fff; margin-bottom:4px; }
+.header-form h1 span {
+  background:linear-gradient(90deg, var(--accent), var(--blue));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.header-form p { font-size:13.5px; color:var(--soft); margin-bottom:22px; }
+.candidate-fields { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+.field-group { display:flex; flex-direction:column; gap:5px; }
+.field-group label {
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:1.5px; text-transform:uppercase; color:var(--muted);
+}
+.field-group input, .field-group select {
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:9px; padding:10px 13px;
+  color:var(--text); font-family:'DM Sans',sans-serif;
+  font-size:13.5px; font-weight:400; outline:none;
+  transition:border-color 0.2s; appearance:none;
+}
+.field-group input:focus, .field-group select:focus { border-color:var(--accent); }
+.field-group input::placeholder { color:var(--muted); }
+
+/* SECTION */
+.section { margin-bottom:44px; animation:fadeUp 0.5s ease both; }
+.section-header {
+  display:flex; align-items:center; gap:13px;
+  margin-bottom:20px; padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+}
+.section-icon {
+  width:36px; height:36px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; flex-shrink:0;
+}
+.section-meta { flex:1; }
+.section-num {
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase; color:var(--muted);
+}
+.section-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; color:#fff; }
+.section-completion {
+  font-family:'Syne',sans-serif; font-size:11px; font-weight:700;
+  color:var(--muted); padding:3px 10px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:100px;
+}
+.section-completion.complete { color:var(--accent); border-color:rgba(45,212,160,0.25); background:rgba(45,212,160,0.07); }
+
+/* QUESTION CARD */
+.q-wrap { display:flex; flex-direction:column; gap:13px; }
+.q-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:13px; overflow:hidden; transition:border-color 0.2s;
+}
+.q-card:focus-within { border-color:var(--accent); }
+.q-top { padding:15px 18px 11px; display:flex; gap:11px; align-items:flex-start; }
+.q-num-badge {
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:1px; color:var(--accent);
+  background:rgba(45,212,160,0.1); border:1px solid rgba(45,212,160,0.2);
+  border-radius:6px; padding:2px 7px; flex-shrink:0; margin-top:1px;
+}
+.q-text { font-size:14px; line-height:1.6; color:var(--text); flex:1; }
+.q-tip-toggle {
+  background:none; border:1px solid var(--border); border-radius:6px;
+  padding:2px 8px; font-size:11px; color:var(--muted); cursor:pointer;
+  flex-shrink:0; transition:all 0.15s; margin-top:1px;
+  font-family:'DM Sans',sans-serif;
+}
+.q-tip-toggle:hover { border-color:var(--gold); color:var(--gold); }
+.q-tip-box {
+  display:none; margin:0 18px 11px;
+  background:rgba(240,180,41,0.05); border:1px solid rgba(240,180,41,0.15);
+  border-radius:8px; padding:10px 12px;
+  font-size:12.5px; color:var(--soft); line-height:1.65; font-style:italic;
+}
+.q-tip-box.open { display:block; }
+.q-tip-box strong { color:var(--gold); font-style:normal; font-weight:500; }
+.q-tip-box .resp-good { color:var(--accent); font-style:normal; }
+.q-tip-box .resp-warn { color:var(--red); font-style:normal; }
+
+/* KNOW BUTTONS (conceitos técnicos) */
+.concept-knowledge { padding:0 18px 12px; display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
+.concept-knowledge label { font-size:11.5px; color:var(--soft); margin-right:3px; }
+.know-btn {
+  padding:3px 11px; border-radius:100px;
+  border:1px solid var(--border2); background:none;
+  font-size:11.5px; color:var(--soft); cursor:pointer;
+  transition:all 0.15s; font-family:'DM Sans',sans-serif;
+}
+.know-btn:hover { border-color:var(--soft); color:var(--text); }
+.know-btn.active-good { border-color:var(--accent); background:rgba(45,212,160,0.1); color:var(--accent); }
+.know-btn.active-ok   { border-color:var(--gold);   background:rgba(240,180,41,0.1);  color:var(--gold);  }
+.know-btn.active-bad  { border-color:var(--red);    background:rgba(248,113,113,0.1); color:var(--red);   }
+
+/* TEXTAREA */
+.q-textarea {
+  width:100%; background:var(--card2); border:none;
+  border-top:1px solid var(--border); padding:13px 18px;
+  color:var(--text); font-family:'DM Sans',sans-serif;
+  font-size:13.5px; font-weight:300; line-height:1.6;
+  resize:vertical; min-height:88px; outline:none; transition:background 0.15s;
+}
+.q-textarea:focus { background:#1b2b26; }
+.q-textarea::placeholder { color:var(--muted); }
+
+/* RATING */
+.q-rating {
+  display:flex; align-items:center; gap:7px;
+  padding:9px 18px; border-top:1px solid var(--border);
+  background:rgba(0,0,0,0.18);
+}
+.rating-label {
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:1px; text-transform:uppercase; color:var(--muted);
+  margin-right:3px;
+}
+.star { font-size:17px; cursor:pointer; color:var(--border2); transition:color 0.1s, transform 0.1s; line-height:1; }
+.star:hover, .star.on { color:var(--gold); transform:scale(1.15); }
+
+/* DIVIDER */
+.bloco-divider {
+  display:flex; align-items:center; gap:14px; margin:44px 0;
+}
+.bloco-divider-line { flex:1; height:1px; background:var(--border); }
+.bloco-divider-label {
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:3px; text-transform:uppercase; color:var(--accent);
+  padding:5px 15px; border:1px solid rgba(45,212,160,0.2); border-radius:100px;
+}
+
+/* FINAL */
+.final-note {
+  background:linear-gradient(135deg, rgba(45,212,160,0.05), rgba(61,127,255,0.05));
+  border:1px solid rgba(45,212,160,0.18); border-radius:14px; padding:24px; margin-top:44px;
+}
+.final-note h3 { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:#fff; margin-bottom:8px; }
+.final-textarea {
+  width:100%; background:rgba(0,0,0,0.2); border:1px solid var(--border2);
+  border-radius:10px; padding:13px 15px; color:var(--text);
+  font-family:'DM Sans',sans-serif; font-size:13.5px; font-weight:300;
+  line-height:1.6; resize:vertical; min-height:100px; outline:none; margin-top:10px;
+}
+.final-textarea::placeholder { color:var(--muted); }
+.final-textarea:focus { border-color:var(--accent); }
+.final-verdict { display:flex; gap:9px; flex-wrap:wrap; margin-top:14px; }
+.verdict-btn {
+  padding:7px 18px; border-radius:100px; border:1px solid var(--border2);
+  background:none; font-family:'Syne',sans-serif; font-size:11px;
+  font-weight:700; letter-spacing:0.5px; color:var(--soft); cursor:pointer; transition:all 0.15s;
+}
+.verdict-btn:hover { color:var(--text); border-color:var(--soft); }
+.verdict-btn.v-aprovado { border-color:var(--accent); color:var(--accent); background:rgba(45,212,160,0.08); }
+.verdict-btn.v-pendente { border-color:var(--gold);   color:var(--gold);   background:rgba(240,180,41,0.08); }
+.verdict-btn.v-reprovado{ border-color:var(--red);    color:var(--red);    background:rgba(248,113,113,0.08); }
+
+/* SECTION ICONS */
+.s1 .section-icon { background:rgba(45,212,160,0.1); }
+.s2 .section-icon { background:rgba(61,127,255,0.1); }
+.s3 .section-icon { background:rgba(240,180,41,0.1); }
+.s4 .section-icon { background:rgba(251,146,60,0.1); }
+.s5 .section-icon { background:rgba(248,113,113,0.1); }
+.s6 .section-icon { background:rgba(45,212,160,0.07); }
+.s7 .section-icon { background:rgba(61,127,255,0.07); }
+.s8 .section-icon { background:rgba(240,180,41,0.07); }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:24px; right:24px;
+  background:var(--accent); color:#000;
+  font-family:'Syne',sans-serif; font-size:12px; font-weight:800;
+  padding:11px 18px; border-radius:10px;
+  display:flex; align-items:center; gap:7px; z-index:999;
+  transform:translateY(80px); opacity:0; transition:all 0.3s;
+}
+.toast.show { transform:translateY(0); opacity:1; }
+
+/* ANIMATIONS */
+@keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(12px)}  to{opacity:1;transform:translateY(0)} }
+.section:nth-child(1){animation-delay:.04s} .section:nth-child(2){animation-delay:.08s}
+.section:nth-child(3){animation-delay:.12s} .section:nth-child(4){animation-delay:.16s}
+.section:nth-child(5){animation-delay:.20s} .section:nth-child(6){animation-delay:.24s}
+.section:nth-child(7){animation-delay:.28s} .section:nth-child(8){animation-delay:.32s}
+
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+@media(max-width:900px) { .sidebar{display:none;} .main{padding:24px 20px 60px;} .candidate-fields{grid-template-columns:1fr 1fr;} }
+@media(max-width:560px) { .candidate-fields{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-tag">Outtax</div>
+    <div class="logo-title">Roteiro de<br>Entrevista</div>
+    <div class="logo-sub">Analista Contábil · Pleno</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Comportamental</div>
+    <a class="nav-item active" href="#b1" onclick="setActive(this)"><span class="nav-icon">🏠</span> Home Office & Rotina <span class="nav-progress" id="prog-1"></span></a>
+    <a class="nav-item" href="#b2" onclick="setActive(this)"><span class="nav-icon">⚙️</span> Otimização de Processo <span class="nav-progress" id="prog-2"></span></a>
+    <a class="nav-item" href="#b3" onclick="setActive(this)"><span class="nav-icon">🤝</span> Cultura & Cliente <span class="nav-progress" id="prog-3"></span></a>
+    <div class="nav-section-label">Técnico Contábil</div>
+    <a class="nav-item" href="#b4" onclick="setActive(this)"><span class="nav-icon">📊</span> IR / CSLL Lucro Real <span class="nav-progress" id="prog-4"></span></a>
+    <a class="nav-item" href="#b5" onclick="setActive(this)"><span class="nav-icon">🏦</span> Conciliação & Balanço <span class="nav-progress" id="prog-5"></span></a>
+    <a class="nav-item" href="#b6" onclick="setActive(this)"><span class="nav-icon">📦</span> CMV & Estoque <span class="nav-progress" id="prog-6"></span></a>
+    <a class="nav-item" href="#b7" onclick="setActive(this)"><span class="nav-icon">📈</span> DRE & Plano de Contas <span class="nav-progress" id="prog-7"></span></a>
+    <a class="nav-item" href="#b8" onclick="setActive(this)"><span class="nav-icon">💼</span> Experiência Prática <span class="nav-progress" id="prog-8"></span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="btn-pdf" onclick="gerarPDF()" id="btnPDF">📄 Gerar PDF</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- CABEÇALHO -->
+  <div class="header-form">
+    <div class="header-tag">Analista Contábil · Pleno</div>
+    <h1>Entrevista <span>Contábil</span></h1>
+    <p>Preencha os dados do candidato e registre as respostas durante a entrevista.</p>
+    <div class="candidate-fields">
+      <div class="field-group"><label>Nome do Candidato</label><input type="text" id="nome" placeholder="Nome completo"></div>
+      <div class="field-group"><label>Cargo Aplicado</label><input type="text" id="cargo" value="Analista Contábil Pleno"></div>
+      <div class="field-group"><label>Data da Entrevista</label><input type="date" id="data"></div>
+      <div class="field-group"><label>Entrevistador</label><input type="text" id="entrevistador" placeholder="Seu nome"></div>
+      <div class="field-group"><label>Modalidade</label>
+        <select id="modalidade">
+          <option>Online (Google Meet)</option><option>Online (Zoom)</option>
+          <option>Online (Teams)</option><option>Presencial</option>
+        </select>
+      </div>
+      <div class="field-group"><label>Etapa</label>
+        <select id="etapa">
+          <option>1ª Entrevista</option><option>2ª Entrevista</option><option>Entrevista Final</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BLOCO 1 — HOME OFFICE & ROTINA
+  ══════════════════════════════════════════ -->
+  <div class="section s1" id="b1">
+    <div class="section-header">
+      <div class="section-icon">🏠</div>
+      <div class="section-meta">
+        <div class="section-num">Bloco 01</div>
+        <div class="section-title">Home Office & Organização de Rotina</div>
+      </div>
+      <div class="section-completion" id="comp-1">0/2</div>
+    </div>
+    <div class="q-wrap">
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q01</span>
+          <span class="q-text">Me conta como é seu dia a dia de trabalho hoje. Como você organiza uma semana típica com múltiplos clientes ou fechamentos simultâneos?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Analista pleno com múltiplos clientes precisa de sistema de priorização real — não pode só "ver o que aparecer". Procure: agenda por cliente, controle de prazos, alertas de vencimento fiscal, checklists mensais. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> "Tenho uma planilha/sistema com todos os fechamentos organizados por prazo e cliente, e reservo blocos fixos de tempo para cada um." <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Vou respondendo conforme vai chegando." — indica reatividade, não gestão.
+        </div>
+        <textarea class="q-textarea" data-block="1" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q02</span>
+          <span class="q-text">Num escritório 80% home office, como você garante que não deixa prazo fiscal escapar? Já passou por alguma situação de prazo crítico trabalhando remoto?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Controle de obrigações acessórias, ECF, ECD, SPED, DCTF, etc. Analista contábil pleno deve ter agenda fiscal na cabeça ou sistematizada. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Menciona agenda fiscal, alertas no calendário, checklist mensal/trimestral de obrigações. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Não tem sistema — depende de alguém avisar.
+        </div>
+        <textarea class="q-textarea" data-block="1" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BLOCO 2 — OTIMIZAÇÃO
+  ══════════════════════════════════════════ -->
+  <div class="section s2" id="b2">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <div class="section-meta">
+        <div class="section-num">Bloco 02</div>
+        <div class="section-title">Otimização de Processos Contábeis</div>
+      </div>
+      <div class="section-completion" id="comp-2">0/2</div>
+    </div>
+    <div class="q-wrap">
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q03</span>
+          <span class="q-text">Você já identificou uma rotina contábil repetitiva e propôs uma melhoria de processo? O que aconteceu?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> A diferença de um pleno para um junior é exatamente essa — além de executar, começa a questionar e melhorar o processo. Pode ser automação de planilha, template de lançamento, padronização de centro de custo, etc. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Exemplo concreto com resultado mensurável ("reduziu X horas", "eliminou retrabalho", "padronizou para toda a equipe"). <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Nunca pensou nisso ou "não é meu papel sugerir".
+        </div>
+        <textarea class="q-textarea" data-block="2" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q04</span>
+          <span class="q-text">Você usa Excel em nível avançado no trabalho contábil? Me dá exemplos práticos do que já montou — dashboards, automatizações, relatórios gerenciais.</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> No BPO contábil, Excel avançado é diferencial real. Busque: tabela dinâmica com segmentação, PROCX/ÍNDICE-CORRESP, Power Query, Macro/VBA, dashboard de DRE automatizado. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> "Montei um dashboard de DRE com tabela dinâmica que atualiza automaticamente ao colar os dados do sistema." <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Uso só SOMA e SOMASE" — para nível pleno, é insuficiente.
+        </div>
+        <textarea class="q-textarea" data-block="2" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BLOCO 3 — CULTURA & CLIENTE
+  ══════════════════════════════════════════ -->
+  <div class="section s3" id="b3">
+    <div class="section-header">
+      <div class="section-icon">🤝</div>
+      <div class="section-meta">
+        <div class="section-num">Bloco 03</div>
+        <div class="section-title">Cultura, Cliente & Comunicação</div>
+      </div>
+      <div class="section-completion" id="comp-3">0/3</div>
+    </div>
+    <div class="q-wrap">
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q05</span>
+          <span class="q-text">Como você traduz um relatório contábil complexo para um cliente que não tem formação financeira? Me dá um exemplo real.</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Comunicação com cliente é crítica nessa vaga. Analista que só fala "debito" e "crédito" para o empresário vai frustrar. Avalie: usa analogias? Simplifica sem perder precisão? Tem empatia com o nível do cliente? <br><br>
+          <strong class="resp-good">✓ Bom:</strong> "Evito jargão técnico. Mostro o DRE em formato visual e comparo com o mês anterior para contextualizar." <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Mando o relatório e o cliente pergunta se não entender."
+        </div>
+        <textarea class="q-textarea" data-block="3" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q06</span>
+          <span class="q-text">Já identificou um problema contábil de um cliente antes que ele percebesse? O que você fez?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Proatividade é o coração da retenção de cliente. Analista que só responde ticket não retém cliente — analista que antecipa problema e liga para avisar, retém. Avalie o instinto de alerta. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> "Vi que a margem de contribuição estava caindo há 3 meses, sinalizei ao cliente antes do fechamento e sugerimos rever precificação." <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Não é meu papel fazer esse tipo de análise, só faço o que pedem."
+        </div>
+        <textarea class="q-textarea" data-block="3" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q07</span>
+          <span class="q-text">Nossa cultura é 80% home office, com autonomia alta e momentos de demanda fora do horário padrão. Como você lida com isso hoje e o que te motivaria a crescer nesse modelo?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Para nível pleno, o alinhamento cultural é tão importante quanto o técnico. Analista que precisa de supervisão constante trava no remoto. Avalie maturidade, autonomia e automotivação. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Fala de entregas, não de horas. Menciona gestão própria de tempo. Demonstra que crescimento técnico o motiva. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Foca muito em "mas como funciona o horário" ou "preciso de direção para saber o que priorizar".
+        </div>
+        <textarea class="q-textarea" data-block="3" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DIVISOR TÉCNICO -->
+  <div class="bloco-divider">
+    <div class="bloco-divider-line"></div>
+    <div class="bloco-divider-label">⚡ Bloco Técnico</div>
+    <div class="bloco-divider-line"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BLOCO 4 — IR / CSLL LUCRO REAL
+  ══════════════════════════════════════════ -->
+  <div class="section s4" id="b4">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <div class="section-meta">
+        <div class="section-num">Bloco 04</div>
+        <div class="section-title">Apuração de IR e CSLL — Lucro Real</div>
+      </div>
+      <div class="section-completion" id="comp-4">0/3</div>
+    </div>
+    <div class="q-wrap">
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q08</span>
+          <span class="q-text">Explica como funciona a apuração de IR e CSLL pelo Lucro Real. Qual o fluxo que você segue no fechamento?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Deve mencionar: resultado contábil → ajustes no LALUR (adições e exclusões) → base de cálculo → alíquotas (IR 15% + adicional 10% acima de R$20k/mês; CSLL 9%). Compensação de prejuízo fiscal limitada a 30%. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> "Parto do lucro líquido contábil, ajusto as adições (despesas não dedutíveis) e exclusões (receitas não tributáveis) no LALUR para chegar à base de cálculo." <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Confunde com Lucro Presumido ou não sabe o que é LALUR.
+        </div>
+        <div class="concept-knowledge">
+          <label>Nível:</label>
+          <button class="know-btn" onclick="setKnow(this,'good')">✓ Domina</button>
+          <button class="know-btn" onclick="setKnow(this,'ok')">~ Conhece parcialmente</button>
+          <button class="know-btn" onclick="setKnow(this,'bad')">✗ Não domina</button>
+        </div>
+        <textarea class="q-textarea" data-block="4" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q09</span>
+          <span class="q-text">Quais são as principais adições e exclusões que você faz no LALUR no dia a dia? Me dá exemplos práticos que já trabalhou.</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Adições comuns: multas de trânsito, brindes acima do limite, provisões não dedutíveis, doações não autorizadas. Exclusões: dividendos recebidos, equivalência patrimonial, receitas de JCP. Prejuízo fiscal compensável até 30% da base. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Cita pelo menos 3 exemplos concretos de adições e/ou exclusões com segurança. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Só sabe a teoria geral, sem exemplos práticos — indica que nunca operou de fato.
+        </div>
+        <div class="concept-knowledge">
+          <label>Nível:</label>
+          <button class="know-btn" onclick="setKnow(this,'good')">✓ Domina</button>
+          <button class="know-btn" onclick="setKnow(this,'ok')">~ Conhece parcialmente</button>
+          <button class="know-btn" onclick="setKnow(this,'bad')">✗ Não domina</button>
+        </div>
+        <textarea class="q-textarea" data-block="4" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q10</span>
+          <span class="q-text">Já trabalhou com estimativa mensal de IR/CSLL no Lucro Real? Como você fazia e qual a diferença para a apuração anual?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Lucro Real pode ter apuração anual (com estimativas mensais via Receita Bruta ou balanço/balancete de redução) ou trimestral. Quem já operou sabe que a estimativa via receita bruta tem percentuais por atividade (IRPJ 1,6% a 8%; CSLL 12% ou 32%). <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Diferencia estimativa por receita bruta vs. por balanço de redução. Conhece os percentuais aplicáveis. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Não sabe o que é estimativa mensal — só conhece apuração trimestral.
+        </div>
+        <div class="concept-knowledge">
+          <label>Nível:</label>
+          <button class="know-btn" onclick="setKnow(this,'good')">✓ Domina</button>
+          <button class="know-btn" onclick="setKnow(this,'ok')">~ Conhece parcialmente</button>
+          <button class="know-btn" onclick="setKnow(this,'bad')">✗ Não domina</button>
+        </div>
+        <textarea class="q-textarea" data-block="4" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BLOCO 5 — CONCILIAÇÃO & BALANÇO
+  ══════════════════════════════════════════ -->
+  <div class="section s5" id="b5">
+    <div class="section-header">
+      <div class="section-icon">🏦</div>
+      <div class="section-meta">
+        <div class="section-num">Bloco 05</div>
+        <div class="section-title">Conciliação Bancária & Fechamento de Balanço</div>
+      </div>
+      <div class="section-completion" id="comp-5">0/3</div>
+    </div>
+    <div class="q-wrap">
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q11</span>
+          <span class="q-text">Como você conduz uma conciliação bancária? Qual o processo e o que você faz quando encontra uma divergência que o cliente não consegue explicar?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Processo: extrato bancário × razão contábil da conta caixa/banco, identificar pendências (cheques em trânsito, depósitos não identificados, tarifas não lançadas). Divergência sem explicação exige contato com cliente para regularização — e analista bom sabe pressionar com diplomacia. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Descreve o processo coluna a coluna, e menciona como documenta e cobra resposta do cliente. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Deixo em aberto até o cliente responder" sem follow-up ativo.
+        </div>
+        <div class="concept-knowledge">
+          <label>Nível:</label>
+          <button class="know-btn" onclick="setKnow(this,'good')">✓ Domina</button>
+          <button class="know-btn" onclick="setKnow(this,'ok')">~ Conhece parcialmente</button>
+          <button class="know-btn" onclick="setKnow(this,'bad')">✗ Não domina</button>
+        </div>
+        <textarea class="q-textarea" data-block="5" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q12</span>
+          <span class="q-text">Me descreve o seu processo de fechamento de balanço. Quais contas você revisa com mais atenção antes de assinar o balanço?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Fechamento envolve: conciliação de todas as contas patrimoniais, provisões (férias, 13º, devedores duvidosos), depreciação atualizada, ajuste de estoques, impostos a recuperar/pagar, reclassificações. Analista bom tem um checklist mental das contas críticas. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Cita provisões, depreciação, estoques, impostos diferidos e reconciliações intercompany se aplicável. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Resposta vaga: "reviso todas as contas" sem especificar as críticas.
+        </div>
+        <div class="concept-knowledge">
+          <label>Nível:</label>
+          <button class="know-btn" onclick="setKnow(this,'good')">✓ Domina</button>
+          <button class="know-btn" onclick="setKnow(this,'ok')">~ Conhece parcialmente</button>
+          <button class="know-btn" onclick="setKnow(this,'bad')">✗ Não domina</button>
+        </div>
+        <textarea class="q-textarea" data-block="5" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q13</span>
+          <span class="q-text">Já encontrou um erro contábil relevante no balanço após o fechamento? O que aconteceu e como você tratou?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Revela maturidade e honestidade. Erro acontece — o que separa o bom analista é como ele reage: identifica a extensão do impacto, comunica com transparência, propõe a correção e documenta para não repetir. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Conta o erro, explica como identificou, descreve a correção e o que mudou no processo depois. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Nunca cometi erro" — falta de autoconsciência ou inexperiência real.
+        </div>
+        <textarea class="q-textarea" data-block="5" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BLOCO 6 — CMV & ESTOQUE
+  ══════════════════════════════════════════ -->
+  <div class="section s6" id="b6">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <div class="section-meta">
+        <div class="section-num">Bloco 06</div>
+        <div class="section-title">CMV & Controle de Estoque</div>
+      </div>
+      <div class="section-completion" id="comp-6">0/2</div>
+    </div>
+    <div class="q-wrap">
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q14</span>
+          <span class="q-text">Como você calcula o CMV? Quais métodos de custeio de estoque você já trabalhou e quando cada um se aplica?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> CMV = Estoque Inicial + Compras − Estoque Final. Métodos: PEPS (primeiro a entrar, primeiro a sair), UEPS (não permitido no BR para fins fiscais), Custo Médio Ponderado (mais comum). Para indústria: absorção vs. variável. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Explica a fórmula, diferencia os métodos e sabe que UEPS não é aceito pela Receita Federal no Brasil. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Não sabe diferenciar os métodos ou confunde CMV com CPV (Custo do Produto Vendido para indústria).
+        </div>
+        <div class="concept-knowledge">
+          <label>Nível:</label>
+          <button class="know-btn" onclick="setKnow(this,'good')">✓ Domina</button>
+          <button class="know-btn" onclick="setKnow(this,'ok')">~ Conhece parcialmente</button>
+          <button class="know-btn" onclick="setKnow(this,'bad')">✗ Não domina</button>
+        </div>
+        <textarea class="q-textarea" data-block="6" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q15</span>
+          <span class="q-text">Como você concilia o estoque físico com o contábil quando há divergências? Já passou por inventário e como conduziu o ajuste?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Divergência entre estoque físico e contábil pode indicar furto, erro de lançamento, devoluções não registradas, quebras não contabilizadas. Ajuste via conta de resultado (Perda com Inventário) ou reclassificação. Deve saber o tratamento fiscal do ajuste. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Descreve o processo de contagem, identifica causas possíveis e sabe como lançar a diferença contabilmente. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Nunca fiz inventário" para um pleno com 2-5 anos é um sinal de experiência limitada.
+        </div>
+        <div class="concept-knowledge">
+          <label>Nível:</label>
+          <button class="know-btn" onclick="setKnow(this,'good')">✓ Domina</button>
+          <button class="know-btn" onclick="setKnow(this,'ok')">~ Conhece parcialmente</button>
+          <button class="know-btn" onclick="setKnow(this,'bad')">✗ Não domina</button>
+        </div>
+        <textarea class="q-textarea" data-block="6" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BLOCO 7 — DRE & PLANO DE CONTAS
+  ══════════════════════════════════════════ -->
+  <div class="section s7" id="b7">
+    <div class="section-header">
+      <div class="section-icon">📈</div>
+      <div class="section-meta">
+        <div class="section-num">Bloco 07</div>
+        <div class="section-title">Análise de DRE & Plano de Contas</div>
+      </div>
+      <div class="section-completion" id="comp-7">0/3</div>
+    </div>
+    <div class="q-wrap">
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q16</span>
+          <span class="q-text">Ao analisar uma DRE de um cliente, quais são os primeiros indicadores que você olha para identificar se algo está errado ou fora do padrão?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Análise vertical (% de cada linha sobre a receita líquida) e horizontal (variação mês/mês ou ano/ano). Pontos críticos: margem bruta caindo, despesas administrativas crescendo acima da receita, resultado financeiro consumindo o operacional, EBITDA negativo. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> "Começo pela margem bruta — se ela cair sem crescimento de despesa fixa, o problema está no custo ou no preço. Depois olho o resultado financeiro para ver se endividamento está corroendo o operacional." <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Olho só o lucro líquido no final."
+        </div>
+        <textarea class="q-textarea" data-block="7" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q17</span>
+          <span class="q-text">Você já construiu ou adaptou um plano de contas para um cliente? Como você decide a estrutura e como garante que ela reflita a realidade do negócio?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Plano de contas bem estruturado é a base de uma boa DRE gerencial. Deve considerar: segmento do cliente, centros de custo, nível de detalhe necessário para gestão vs. obrigações fiscais, e compatibilidade com o sistema (Domínio, Nibo etc.). <br><br>
+          <strong class="resp-good">✓ Bom:</strong> "Começo entendendo os centros de resultado do cliente — produto, filial ou canal — e estruturo as contas para que o DRE mostre a margem de cada um separadamente." <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Uso sempre o padrão do sistema e não customizo."
+        </div>
+        <textarea class="q-textarea" data-block="7" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q18</span>
+          <span class="q-text">Como você apresenta a análise de DRE para um cliente que está com resultado negativo? Como você conduz essa conversa?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Entrega de resultado ruim exige técnica + empatia. Analista bom não despeja o número negativo — contextualiza, aponta causa raiz, sugere ação. Avalie se o candidato sabe ser o portador de más notícias sem ser o vilão da história. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> "Preparo a análise mostrando onde o desvio ocorreu, comparo com o período anterior e já levo 2 ou 3 sugestões concretas para o cliente avaliar." <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Mando o relatório e explico o que ele pedir."
+        </div>
+        <textarea class="q-textarea" data-block="7" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BLOCO 8 — EXPERIÊNCIA PRÁTICA
+  ══════════════════════════════════════════ -->
+  <div class="section s8" id="b8">
+    <div class="section-header">
+      <div class="section-icon">💼</div>
+      <div class="section-meta">
+        <div class="section-num">Bloco 08</div>
+        <div class="section-title">Experiência Prática & Sistemas</div>
+      </div>
+      <div class="section-completion" id="comp-8">0/3</div>
+    </div>
+    <div class="q-wrap">
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q19</span>
+          <span class="q-text">Quais sistemas contábeis você já utilizou? Tem experiência com o sistema Domínio? Como avalia seu nível nele?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Domínio é o sistema principal do escritório. Experiência prévia reduz muito a curva de adaptação. Além do Domínio, outros sistemas relevantes: Totvs, Alterdata, Questor, Senior, SAP. Avalie honestidade no auto-relato do nível. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Usa ou já usou o Domínio, conhece os módulos (contábil, fiscal, folha). <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Nunca ouviu falar do Domínio — não é eliminatório, mas aumenta o tempo de adaptação.
+        </div>
+        <div class="concept-knowledge">
+          <label>Domínio:</label>
+          <button class="know-btn" onclick="setKnow(this,'good')">✓ Usa atualmente</button>
+          <button class="know-btn" onclick="setKnow(this,'ok')">~ Já usou</button>
+          <button class="know-btn" onclick="setKnow(this,'bad')">✗ Nunca usou</button>
+        </div>
+        <textarea class="q-textarea" data-block="8" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q20</span>
+          <span class="q-text">Quantos clientes simultâneos você já gerenciou? Qual o maior porte de empresa (faturamento) que já foi responsável pelo fechamento?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Escala e complexidade de experiência. Analista que nunca fechou empresa acima de Simples Nacional pode ter dificuldade com Lucro Real de imediato. Volume de clientes revela capacidade de gestão paralela. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Já gerenciou 5+ clientes simultâneos e teve pelo menos uma empresa de médio porte (Lucro Real/Presumido com mais de R$1M de faturamento). <br>
+          <strong class="resp-warn">✗ Atenção:</strong> Experiência restrita a Simples Nacional e poucos clientes.
+        </div>
+        <textarea class="q-textarea" data-block="8" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-top">
+          <span class="q-num-badge">Q21</span>
+          <span class="q-text">Onde você quer estar profissionalmente em 3 anos? O que te faria sair de um emprego antes desse prazo?</span>
+          <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+        </div>
+        <div class="q-tip-box">
+          <strong>O que avaliar:</strong> Retenção. Analista pleno que quer crescer para sênior/gerente dentro de um escritório em expansão é o perfil ideal. Fique atento a quem quer "abrir o próprio escritório em breve" — pode ser uma saída rápida. Avalie também o que desmotivaria: burocracia demais, sem autonomia, sem crescimento, gestão ruim. <br><br>
+          <strong class="resp-good">✓ Bom:</strong> Fala em crescimento técnico, liderança de projetos ou de equipe, construção de carteira de clientes. <br>
+          <strong class="resp-warn">✗ Atenção:</strong> "Quero abrir meu escritório em 2 anos" — risco de retenção baixo.
+        </div>
+        <textarea class="q-textarea" data-block="8" placeholder="Anote a resposta aqui..." oninput="updateProgress(this)"></textarea>
+        <div class="q-rating"><span class="rating-label">Avaliação</span>
+          <span class="star" onclick="setRating(this,1)">★</span><span class="star" onclick="setRating(this,2)">★</span>
+          <span class="star" onclick="setRating(this,3)">★</span><span class="star" onclick="setRating(this,4)">★</span>
+          <span class="star" onclick="setRating(this,5)">★</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NOTA FINAL -->
+  <div class="final-note">
+    <h3>📝 Observações Finais & Veredicto</h3>
+    <p style="font-size:13px;color:var(--soft);line-height:1.6;">Impressões gerais, pontos de atenção, pretensão salarial, disponibilidade de início e qualquer detalhe relevante.</p>
+    <textarea class="final-textarea" id="obs-final" placeholder="Ex: Candidato tem sólida experiência com Lucro Real mas nunca trabalhou com clientes diretos. Comunicação clara, mas pode precisar de desenvolvimento na parte de relacionamento..."></textarea>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px;margin-bottom:8px;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Veredicto</p>
+    <div class="final-verdict">
+      <button class="verdict-btn" onclick="setVerdict(this,'Aprovado — Avançar para próxima etapa')">✅ Aprovado</button>
+      <button class="verdict-btn" onclick="setVerdict(this,'Em análise — Aguardando comparativo com outros candidatos')">⏳ Em análise</button>
+      <button class="verdict-btn" onclick="setVerdict(this,'Reprovado — Não segue para próxima etapa')">❌ Reprovado</button>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<div class="toast" id="toast">📄 PDF gerado com sucesso!</div>
+
+<script>
+let verdictValue = '';
+const blockTotals = {1:2,2:2,3:3,4:3,5:3,6:2,7:3,8:3};
+
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+}
+function toggleTip(btn) {
+  const tip = btn.closest('.q-card').querySelector('.q-tip-box');
+  tip.classList.toggle('open');
+  btn.textContent = tip.classList.contains('open') ? '✕ Fechar' : '💡 Dica';
+}
+function setRating(star, val) {
+  const row = star.closest('.q-rating');
+  row.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('on', i < val));
+  row.dataset.rating = val;
+}
+function setKnow(btn, level) {
+  const g = btn.closest('.concept-knowledge');
+  g.querySelectorAll('.know-btn').forEach(b=>b.classList.remove('active-good','active-ok','active-bad'));
+  btn.classList.add('active-' + level);
+}
+function updateProgress(ta) {
+  const b = ta.dataset.block;
+  const all = document.querySelectorAll(`textarea[data-block="${b}"]`);
+  const filled = [...all].filter(t=>t.value.trim().length > 3).length;
+  const total = blockTotals[b];
+  const comp = document.getElementById(`comp-${b}`);
+  comp.textContent = `${filled}/${total}`;
+  comp.classList.toggle('complete', filled === total);
+  document.getElementById(`prog-${b}`).classList.toggle('done', filled === total);
+}
+function setVerdict(btn, val) {
+  verdictValue = val;
+  document.querySelectorAll('.verdict-btn').forEach(b=>b.classList.remove('v-aprovado','v-pendente','v-reprovado'));
+  if (val.includes('Aprovado')) btn.classList.add('v-aprovado');
+  else if (val.includes('análise')) btn.classList.add('v-pendente');
+  else btn.classList.add('v-reprovado');
+}
+
+document.getElementById('data').valueAsDate = new Date();
+
+function getRating(card) { const r = card.querySelector('.q-rating'); return r ? (parseInt(r.dataset.rating)||0) : 0; }
+function getStars(n) { return '★'.repeat(n)+'☆'.repeat(5-n); }
+function getKnow(card) {
+  const a = card.querySelector('.know-btn.active-good,.know-btn.active-ok,.know-btn.active-bad');
+  if (!a) return '';
+  if (a.classList.contains('active-good')) return 'Domina';
+  if (a.classList.contains('active-ok')) return 'Conhece parcialmente';
+  return 'Não domina';
+}
+
+async function gerarPDF() {
+  const btn = document.getElementById('btnPDF');
+  btn.disabled = true; btn.innerHTML = '⏳ Gerando...';
+  await new Promise(r=>setTimeout(r,100));
+  const {jsPDF} = window.jspdf;
+  const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+
+  const nome = document.getElementById('nome').value||'Não informado';
+  const cargo = document.getElementById('cargo').value||'Analista Contábil Pleno';
+  const data = document.getElementById('data').value||'';
+  const entrevistador = document.getElementById('entrevistador').value||'Não informado';
+  const modalidade = document.getElementById('modalidade').value;
+  const etapa = document.getElementById('etapa').value;
+  const obsFinal = document.getElementById('obs-final').value||'';
+  const dataFmt = data ? new Date(data+'T12:00:00').toLocaleDateString('pt-BR') : 'N/D';
+  const W=210, margin=18, cW=W-margin*2;
+  let y=0, pageNum=1;
+
+  // ─── CAPA ───
+  pdf.setFillColor(9,16,15); pdf.rect(0,0,W,297,'F');
+  pdf.setFillColor(45,212,160); pdf.rect(0,0,6,297,'F');
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(9);
+  pdf.setTextColor(45,212,160); pdf.text('OUTTAX CONTABILIDADE',margin+4,28);
+  pdf.setFontSize(26); pdf.setTextColor(255,255,255);
+  pdf.text('Relatório de',margin+4,46); pdf.text('Entrevista',margin+4,59);
+  pdf.setFontSize(11); pdf.setTextColor(120,158,150);
+  pdf.text('Analista Contábil Pleno · '+etapa,margin+4,70);
+  pdf.setDrawColor(30,46,42); pdf.setLineWidth(0.5);
+  pdf.line(margin+4,78,W-margin,78);
+
+  pdf.setFillColor(19,29,26);
+  pdf.roundedRect(margin+4,86,cW-4,72,3,3,'F');
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(9);
+  pdf.setTextColor(67,85,80); pdf.text('CANDIDATO',margin+12,100);
+  pdf.setFontSize(18); pdf.setTextColor(255,255,255); pdf.text(nome,margin+12,112);
+  pdf.setFontSize(10); pdf.setTextColor(120,158,150); pdf.setFont('helvetica','normal');
+  pdf.text(cargo,margin+12,121);
+
+  pdf.setFontSize(8); pdf.setTextColor(67,85,80);
+  pdf.text('DATA',margin+12,135); pdf.text('ENTREVISTADOR',margin+60,135); pdf.text('MODALIDADE',margin+118,135);
+  pdf.setFontSize(9); pdf.setTextColor(224,237,233);
+  pdf.text(dataFmt,margin+12,142); pdf.text(entrevistador,margin+60,142); pdf.text(modalidade,margin+118,142);
+
+  if (verdictValue) {
+    const vc = verdictValue.includes('Aprovado')?[45,212,160]:verdictValue.includes('análise')?[240,180,41]:[248,113,113];
+    pdf.setFillColor(...vc);
+    pdf.roundedRect(margin+4,167,cW-4,14,2,2,'F');
+    pdf.setFont('helvetica','bold'); pdf.setFontSize(10); pdf.setTextColor(10,10,10);
+    pdf.text(verdictValue,margin+10,177);
+  }
+  pdf.setFont('helvetica','normal'); pdf.setFontSize(8);
+  pdf.setTextColor(67,85,80);
+  pdf.text('Documento gerado automaticamente · Outtax Contabilidade',margin+4,285);
+  pdf.text('Página 1',W-margin-12,285);
+
+  // ─── BLOCOS ───
+  const blocos=[
+    {id:'b1',num:'01',titulo:'Home Office & Organização de Rotina'},
+    {id:'b2',num:'02',titulo:'Otimização de Processos Contábeis'},
+    {id:'b3',num:'03',titulo:'Cultura, Cliente & Comunicação'},
+    {id:'b4',num:'04',titulo:'Apuração de IR e CSLL — Lucro Real'},
+    {id:'b5',num:'05',titulo:'Conciliação Bancária & Fechamento de Balanço'},
+    {id:'b6',num:'06',titulo:'CMV & Controle de Estoque'},
+    {id:'b7',num:'07',titulo:'Análise de DRE & Plano de Contas'},
+    {id:'b8',num:'08',titulo:'Experiência Prática & Sistemas'},
+  ];
+
+  for (const bloco of blocos) {
+    pageNum++;
+    pdf.addPage();
+    pdf.setFillColor(9,16,15); pdf.rect(0,0,W,297,'F');
+    pdf.setFillColor(45,212,160); pdf.rect(0,0,6,297,'F');
+    y=20;
+    pdf.setFont('helvetica','bold'); pdf.setFontSize(8); pdf.setTextColor(45,212,160);
+    pdf.text('BLOCO '+bloco.num,margin+4,y); y+=8;
+    pdf.setFontSize(15); pdf.setTextColor(255,255,255); pdf.text(bloco.titulo,margin+4,y); y+=4;
+    pdf.setDrawColor(30,46,42); pdf.setLineWidth(0.4); pdf.line(margin+4,y+2,W-margin,y+2); y+=10;
+
+    const cards = document.getElementById(bloco.id).querySelectorAll('.q-card');
+    cards.forEach(card=>{
+      if (y>250) {
+        pdf.setFont('helvetica','normal'); pdf.setFontSize(8); pdf.setTextColor(67,85,80);
+        pdf.text(`Página ${pageNum}`,W-margin-12,285);
+        pageNum++; pdf.addPage();
+        pdf.setFillColor(9,16,15); pdf.rect(0,0,W,297,'F');
+        pdf.setFillColor(45,212,160); pdf.rect(0,0,6,297,'F');
+        y=20;
+      }
+      const qNum = card.querySelector('.q-num-badge')?.textContent?.trim()||'';
+      const qText = card.querySelector('.q-text')?.innerText?.trim()||'';
+      const qAns = card.querySelector('textarea')?.value?.trim()||'';
+      const rating = getRating(card);
+      const know = getKnow(card);
+
+      pdf.setFillColor(19,29,26);
+      pdf.roundedRect(margin+4,y,cW-4,Math.min(Math.max(32,32+Math.ceil(qAns.length/68)*5+(know?7:0)),297-y-10),2,2,'F');
+
+      pdf.setFillColor(15,40,32);
+      pdf.roundedRect(margin+8,y+4,18,6,1,1,'F');
+      pdf.setFont('helvetica','bold'); pdf.setFontSize(7); pdf.setTextColor(45,212,160);
+      pdf.text(qNum,margin+9,y+9);
+
+      pdf.setFont('helvetica','normal'); pdf.setFontSize(10); pdf.setTextColor(240,180,41);
+      pdf.text(getStars(rating),W-margin-33,y+9);
+
+      pdf.setFont('helvetica','bold'); pdf.setFontSize(9); pdf.setTextColor(210,230,225);
+      const ql = pdf.splitTextToSize(qText,cW-40);
+      pdf.text(ql,margin+30,y+9);
+      let iy = y+9+ql.length*5+2;
+
+      if (know) {
+        pdf.setFont('helvetica','italic'); pdf.setFontSize(8); pdf.setTextColor(67,85,80);
+        pdf.text('Nível: '+know,margin+8,iy); iy+=6;
+      }
+      pdf.setDrawColor(30,46,42); pdf.setLineWidth(0.3);
+      pdf.line(margin+8,iy,W-margin-8,iy); iy+=4;
+
+      if (qAns) {
+        pdf.setFont('helvetica','normal'); pdf.setFontSize(8.5); pdf.setTextColor(120,158,150);
+        const al = pdf.splitTextToSize(qAns,cW-18);
+        al.forEach(line=>{
+          if (iy>273) {
+            pdf.setFont('helvetica','normal'); pdf.setFontSize(8); pdf.setTextColor(67,85,80);
+            pdf.text(`Página ${pageNum}`,W-margin-12,285);
+            pageNum++; pdf.addPage();
+            pdf.setFillColor(9,16,15); pdf.rect(0,0,W,297,'F');
+            pdf.setFillColor(45,212,160); pdf.rect(0,0,6,297,'F');
+            iy=20;
+          }
+          pdf.text(line,margin+8,iy); iy+=5;
+        });
+      } else {
+        pdf.setFont('helvetica','italic'); pdf.setFontSize(8); pdf.setTextColor(50,70,65);
+        pdf.text('(sem resposta registrada)',margin+8,iy); iy+=5;
+      }
+      y = iy+10;
+    });
+
+    pdf.setFont('helvetica','normal'); pdf.setFontSize(8); pdf.setTextColor(67,85,80);
+    pdf.text('Outtax · Analista Contábil Pleno',margin+4,285);
+    pdf.text(`Página ${pageNum}`,W-margin-12,285);
+  }
+
+  // OBS FINAL
+  pageNum++; pdf.addPage();
+  pdf.setFillColor(9,16,15); pdf.rect(0,0,W,297,'F');
+  pdf.setFillColor(45,212,160); pdf.rect(0,0,6,297,'F');
+  y=20;
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(8); pdf.setTextColor(45,212,160);
+  pdf.text('CONSIDERAÇÕES FINAIS',margin+4,y); y+=9;
+  pdf.setFontSize(15); pdf.setTextColor(255,255,255); pdf.text('Observações & Veredicto',margin+4,y); y+=5;
+  pdf.setDrawColor(30,46,42); pdf.line(margin+4,y+1,W-margin,y+1); y+=12;
+  if (verdictValue) {
+    const vc = verdictValue.includes('Aprovado')?[45,212,160]:verdictValue.includes('análise')?[240,180,41]:[248,113,113];
+    pdf.setFillColor(...vc);
+    pdf.roundedRect(margin+4,y,cW-4,12,2,2,'F');
+    pdf.setFont('helvetica','bold'); pdf.setFontSize(9.5); pdf.setTextColor(10,10,10);
+    pdf.text('VEREDICTO: '+verdictValue.toUpperCase(),margin+10,y+8); y+=20;
+  }
+  pdf.setFillColor(19,29,26); pdf.roundedRect(margin+4,y,cW-4,90,3,3,'F');
+  if (obsFinal) {
+    pdf.setFont('helvetica','normal'); pdf.setFontSize(9); pdf.setTextColor(120,158,150);
+    const ol=pdf.splitTextToSize(obsFinal,cW-18);
+    ol.forEach(line=>{ pdf.text(line,margin+10,y+10); y+=5.5; });
+  } else {
+    pdf.setFont('helvetica','italic'); pdf.setFontSize(9); pdf.setTextColor(45,70,65);
+    pdf.text('(sem observações registradas)',margin+10,y+14);
+  }
+  y=218;
+  pdf.setDrawColor(30,46,42); pdf.setLineWidth(0.4);
+  pdf.line(margin+4,y,margin+78,y); pdf.line(margin+98,y,margin+174,y);
+  pdf.setFont('helvetica','normal'); pdf.setFontSize(8); pdf.setTextColor(67,85,80);
+  pdf.text('Assinatura do Entrevistador',margin+4,y+5);
+  pdf.text('Data / Hora',margin+98,y+5);
+  pdf.text(entrevistador,margin+4,y+12);
+  pdf.text('Outtax Contabilidade · Analista Contábil Pleno',margin+4,285);
+  pdf.text(`Página ${pageNum}`,W-margin-12,285);
+
+  const fname = `Entrevista_${nome.replace(/\s+/g,'_')}_Contabil_${dataFmt.replace(/\//g,'-')}.pdf`;
+  pdf.save(fname);
+  btn.disabled=false; btn.innerHTML='📄 Gerar PDF';
+  const t=document.getElementById('toast'); t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
