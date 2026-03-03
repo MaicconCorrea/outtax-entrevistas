@@ -298,6 +298,36 @@ body {
 ::-webkit-scrollbar { width:5px; }
 ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
 
+/* GABARITO */
+.q-ref { display:none; margin:0 18px 11px; border-radius:8px; overflow:hidden; border:1px solid var(--border2); }
+.q-ref.open { display:block; }
+.q-ref-header {
+  background:rgba(255,255,255,0.03); padding:7px 12px;
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase; color:var(--soft);
+  border-bottom:1px solid var(--border2);
+}
+.ref-row { display:flex; border-top:1px solid var(--border2); }
+.ref-row:first-of-type { border-top:none; }
+.ref-badge {
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:800;
+  letter-spacing:0.5px; text-transform:uppercase;
+  padding:10px 11px; min-width:78px;
+  display:flex; align-items:flex-start; justify-content:center;
+  border-right:1px solid var(--border2); flex-shrink:0;
+}
+.ref-badge.good { background:rgba(45,212,160,0.07); color:var(--green); }
+.ref-badge.ok   { background:rgba(240,180,41,0.07);  color:var(--gold); }
+.ref-badge.bad  { background:rgba(248,113,113,0.07); color:var(--red); }
+.ref-text { font-size:12.5px; color:var(--soft); line-height:1.6; padding:10px 12px; background:rgba(0,0,0,0.12); font-style:italic; }
+.q-ref-toggle {
+  background:none; border:1px solid var(--border); border-radius:6px;
+  padding:2px 8px; font-size:11px; color:var(--muted); cursor:pointer;
+  flex-shrink:0; transition:all 0.15s; margin-top:1px;
+  font-family:'DM Sans',sans-serif;
+}
+.q-ref-toggle:hover { border-color:var(--accent); color:var(--accent); }
+
 @media(max-width:900px) { .sidebar{display:none;} .main{padding:24px 20px 60px;} .candidate-fields{grid-template-columns:1fr 1fr;} }
 @media(max-width:560px) { .candidate-fields{grid-template-columns:1fr;} }
 </style>
@@ -1006,6 +1036,147 @@ function setVerdict(btn, val) {
 }
 
 document.getElementById('data').valueAsDate = new Date();
+
+// ─── GABARITOS DE REFERÊNCIA — ANALISTA CONTÁBIL ───
+const gabaritos = {
+  'Q01': {
+    good: 'Tem sistema real de gestão de clientes: planilha ou ferramenta com prazos por cliente, blocos de tempo reservados, alertas de fechamento. Demonstra que múltiplos clientes simultâneos não é problema.',
+    ok:   'Organiza por urgência e vai priorizando. Funciona, mas sem sistema estruturado.',
+    bad:  '"Vou resolvendo conforme aparece" — reativo. Para nível pleno com múltiplos clientes, é um sinal de risco.'
+  },
+  'Q02': {
+    good: 'Tem agenda fiscal própria: calendário com todas as obrigações, alertas automáticos, checklist mensal/trimestral. Não depende de ninguém avisar.',
+    ok:   'Usa o calendário do sistema ou e-mails de aviso, mas sem controle próprio sistematizado.',
+    bad:  'Depende de alguém avisar sobre prazos. Para analista pleno, é um risco real de obrigação perdida.'
+  },
+  'Q03': {
+    good: 'Exemplo concreto com resultado: "criei um template de lançamento que reduziu X horas", "padronizei o plano de contas para toda a carteira", "automatizei o relatório via Power Query". Fechou o ciclo.',
+    ok:   'Identificou a melhoria mas não chegou a implementar ou a melhoria foi incremental e não documentada.',
+    bad:  'Nunca questionou processos ou diz que não é seu papel sugerir melhorias.'
+  },
+  'Q04': {
+    good: 'Usa tabela dinâmica, PROCX/ÍNDICE-CORRESP, Power Query ou Macro/VBA. Dá exemplo prático como dashboard de DRE, conciliação automatizada ou relatório gerencial com atualização dinâmica.',
+    ok:   'Usa PROCV, SOMASE, tabela dinâmica básica. Nível funcional mas sem automatizações.',
+    bad:  'Excel básico (SOMA, filtro). Para analista pleno que vai construir relatórios gerenciais, é insuficiente.'
+  },
+  'Q05': {
+    good: 'Dá exemplo real com analogia acessível. Evita jargão. Mostra que entende o nível do cliente e adapta a linguagem: gráfico, comparativo, storytelling com os números.',
+    ok:   'Explica de forma simples mas ainda usa alguns termos técnicos sem perceber.',
+    bad:  '"Mando o relatório e o cliente pergunta se não entender." Postura passiva que gera problema de relacionamento.'
+  },
+  'Q06': {
+    good: 'Exemplo real de proatividade: detectou tendência negativa, sinalizou antes do fechamento, sugeriu ação. O analista virou parceiro e não só executor.',
+    ok:   'Já identificou algo fora do padrão e avisou, mas só depois de ser questionado.',
+    bad:  '"Não é meu papel fazer esse tipo de análise." Postura de executor puro — não retém cliente.'
+  },
+  'Q07': {
+    good: 'Fala de entregas, não de horas. Tem gestão própria de tempo. Motivado por crescimento técnico e autonomia. Home office é natural para ele.',
+    ok:   'Funciona bem remoto mas ainda precisa de alguma estrutura de acompanhamento periódico.',
+    bad:  'Foca muito em "como funciona o horário" ou precisa de direção constante. Vai travar no modelo.'
+  },
+  'Q08': {
+    good: 'Descreve o fluxo com segurança: lucro líquido contábil → adições no LALUR → exclusões no LALUR → base de cálculo → alíquotas (IR 15% + adicional 10%; CSLL 9%). Menciona compensação de prejuízo fiscal (limite 30%).',
+    ok:   'Conhece o conceito geral e o LALUR mas não detalha adições/exclusões com segurança.',
+    bad:  'Confunde com Lucro Presumido ou não sabe o que é LALUR. Não domina o fluxo.'
+  },
+  'Q09': {
+    good: 'Cita pelo menos 3 exemplos concretos: adições (multas, brindes, provisões não dedutíveis) e exclusões (dividendos, equivalência patrimonial, JCP). Sabe aplicar no dia a dia.',
+    ok:   'Conhece a teoria — adições são despesas não dedutíveis, exclusões são receitas não tributáveis — mas com poucos exemplos práticos.',
+    bad:  'Só teoria geral sem exemplos. Indica que nunca operou o Lucro Real de fato.'
+  },
+  'Q10': {
+    good: 'Diferencia estimativa por receita bruta (percentuais por atividade) vs. por balanço de redução (suspensão/redução do imposto). Conhece os percentuais aplicáveis de memória.',
+    ok:   'Sabe que existe estimativa mensal mas não diferencia as modalidades com precisão.',
+    bad:  'Não sabe o que é estimativa mensal. Só conhece apuração trimestral — experiência limitada com Lucro Real.'
+  },
+  'Q11': {
+    good: 'Descreve o processo coluna a coluna. Na divergência sem explicação: documenta, entra em contato com o cliente, dá prazo para retorno e faz follow-up ativo. Não deixa em aberto.',
+    ok:   'Faz a conciliação corretamente mas o follow-up com cliente é passivo — espera retorno sem cobrar.',
+    bad:  '"Deixo em aberto até o cliente responder." Sem follow-up ativo, a conciliação nunca fecha.'
+  },
+  'Q12': {
+    good: 'Tem checklist mental das contas críticas: provisões (férias, 13º, devedores), depreciação, ajuste de estoques, impostos a recuperar/pagar, reclassificações entre circulante e não circulante.',
+    ok:   'Revisa as principais contas mas de forma intuitiva, sem processo documentado.',
+    bad:  '"Reviso todas as contas" — resposta vaga que indica falta de critério ou experiência superficial com fechamento.'
+  },
+  'Q13': {
+    good: 'Conta o erro com naturalidade, explica como identificou, descreve a correção contábil e o que mudou no processo para não repetir. Maturidade e honestidade.',
+    ok:   'Conta um erro mas minimiza o impacto ou a solução foi indicada por outra pessoa.',
+    bad:  '"Nunca cometi erro" — falta de autoconsciência ou experiência muito limitada em fechamentos reais.'
+  },
+  'Q14': {
+    good: 'Explica CMV = EI + Compras − EF. Diferencia PEPS, UEPS (não aceito pela RF no Brasil) e Custo Médio Ponderado. Sabe quando cada um se aplica e as implicações fiscais.',
+    ok:   'Conhece a fórmula do CMV e sabe que existem métodos diferentes, mas não detalha as diferenças com segurança.',
+    bad:  'Não diferencia os métodos ou confunde CMV com CPV (custo do produto vendido para indústria).'
+  },
+  'Q15': {
+    good: 'Descreve o processo de contagem física, identifica as causas possíveis (furto, erro de lançamento, quebra, devolução não registrada) e sabe o lançamento contábil do ajuste.',
+    ok:   'Já participou de inventário mas atuou só na contagem, sem responsabilidade pelo ajuste contábil.',
+    bad:  '"Nunca fiz inventário" para analista pleno com 2-5 anos é sinal de experiência muito restrita.'
+  },
+  'Q16': {
+    good: 'Análise vertical (% sobre receita líquida) e horizontal (variação período a período). Olha margem bruta, despesas crescendo acima da receita, resultado financeiro corroendo o operacional.',
+    ok:   'Olha os principais indicadores mas de forma sequencial, sem análise comparativa estruturada.',
+    bad:  '"Olho só o lucro líquido no final." Análise superficial que não identifica problema na origem.'
+  },
+  'Q17': {
+    good: 'Começa pelo negócio do cliente: centros de resultado, produtos ou canais. Estrutura o plano para que o DRE mostre a margem de cada um. Conhece a lógica de contas analíticas vs. sintéticas.',
+    ok:   'Já adaptou plano de contas mas seguindo um modelo pré-existente, sem construir do zero.',
+    bad:  '"Uso sempre o padrão do sistema." Não customiza — entrega um DRE genérico que não serve para gestão.'
+  },
+  'Q18': {
+    good: 'Prepara a análise antes da reunião: aponta causa raiz, compara com período anterior, já leva 2-3 sugestões de ação. O cliente sai com diagnóstico e caminho, não só com o número ruim.',
+    ok:   'Apresenta o resultado negativo mas espera o cliente perguntar para explicar as causas.',
+    bad:  '"Mando o relatório e explico o que ele pedir." Postura reativa que gera insatisfação e perda de cliente.'
+  },
+  'Q19': {
+    good: 'Usa ou já usou o Domínio. Conhece os módulos principais (contábil, fiscal, folha). Avalia seu nível com honestidade.',
+    ok:   'Não usa Domínio mas tem experiência com sistema similar (Alterdata, Questor, Senior). Curva de adaptação curta.',
+    bad:  'Nunca usou nenhum sistema de escritório contábil. Curva de adaptação mais longa.'
+  },
+  'Q20': {
+    good: 'Gerenciou 5+ clientes simultâneos, com pelo menos uma empresa de médio porte em Lucro Real ou Presumido (faturamento acima de R$1M). Demonstra escala e complexidade.',
+    ok:   'Gerenciou 2-4 clientes, maioria Simples Nacional. Boa execução mas pouca complexidade.',
+    bad:  'Experiência restrita a 1-2 clientes pequenos. Pode ter dificuldade com a escala e complexidade do escritório.'
+  },
+  'Q21': {
+    good: 'Quer crescer para sênior ou liderar projetos/equipe dentro de um escritório em expansão. Motivação técnica genuína. Plano de 3 anos compatível com o crescimento da empresa.',
+    ok:   'Quer crescer mas o plano é vago. Sem clareza sobre o que quer desenvolver especificamente.',
+    bad:  '"Quero abrir meu próprio escritório em 2 anos." Alto risco de retenção — investimento na formação pode ir embora.'
+  }
+};
+
+document.querySelectorAll('.q-card').forEach(card => {
+  const badge = card.querySelector('.q-num-badge');
+  if (!badge) return;
+  const qnum = badge.textContent.trim();
+  const gab = gabaritos[qnum];
+  if (!gab) return;
+
+  const qtop = card.querySelector('.q-top');
+  const refBtn = document.createElement('button');
+  refBtn.className = 'q-ref-toggle';
+  refBtn.textContent = '📋 Gabarito';
+  refBtn.onclick = function() { toggleRef(this); };
+  qtop.appendChild(refBtn);
+
+  const tipBox = card.querySelector('.q-tip-box');
+  const refDiv = document.createElement('div');
+  refDiv.className = 'q-ref';
+  refDiv.innerHTML = `
+    <div class="q-ref-header">Respostas de Referência</div>
+    <div class="ref-row"><div class="ref-badge good">✓ Ótimo</div><div class="ref-text">${gab.good}</div></div>
+    <div class="ref-row"><div class="ref-badge ok">~ Ok</div><div class="ref-text">${gab.ok}</div></div>
+    <div class="ref-row"><div class="ref-badge bad">✗ Alerta</div><div class="ref-text">${gab.bad}</div></div>
+  `;
+  tipBox.insertAdjacentElement('afterend', refDiv);
+});
+
+function toggleRef(btn) {
+  const ref = btn.closest('.q-card').querySelector('.q-ref');
+  ref.classList.toggle('open');
+  btn.textContent = ref.classList.contains('open') ? '✕ Fechar' : '📋 Gabarito';
+}
 
 function getRating(card) { const r = card.querySelector('.q-rating'); return r ? (parseInt(r.dataset.rating)||0) : 0; }
 function getStars(n) { return '★'.repeat(n)+'☆'.repeat(5-n); }
