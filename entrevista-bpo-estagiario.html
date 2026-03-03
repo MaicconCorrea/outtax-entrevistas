@@ -370,6 +370,62 @@ body {
 .q-tip-box.open { display: block; }
 .q-tip-box strong { color: var(--gold); font-style: normal; font-weight: 500; }
 
+/* GABARITO DE REFERÊNCIA */
+.q-ref { display: none; margin: 0 20px 12px; border-radius: 8px; overflow: hidden; }
+.q-ref.open { display: block; }
+.q-ref-header {
+  background: rgba(255,255,255,0.04);
+  padding: 7px 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--soft);
+  border: 1px solid var(--border2);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+.ref-row {
+  display: flex; gap: 0;
+  border: 1px solid var(--border2);
+  border-top: none;
+}
+.ref-row:last-child { border-radius: 0 0 8px 8px; overflow: hidden; }
+.ref-badge {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  padding: 10px 12px;
+  min-width: 82px;
+  display: flex; align-items: flex-start;
+  border-right: 1px solid var(--border2);
+  flex-shrink: 0;
+}
+.ref-badge.good { background: rgba(45,212,160,0.08); color: var(--green); }
+.ref-badge.ok   { background: rgba(240,180,41,0.07); color: var(--gold); }
+.ref-badge.bad  { background: rgba(248,113,113,0.07); color: var(--red); }
+.ref-text {
+  font-size: 12.5px; color: var(--soft);
+  line-height: 1.6; padding: 10px 12px;
+  background: rgba(0,0,0,0.15);
+  font-style: italic;
+}
+.ref-row + .ref-row { border-top: 1px solid var(--border2); }
+
+.q-ref-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  margin-top: 1px;
+  font-family: 'DM Sans', sans-serif;
+}
+.q-ref-toggle:hover { border-color: var(--green); color: var(--green); }
+
 /* CONCEPT KNOWLEDGE */
 .concept-knowledge {
   padding: 0 20px 14px;
@@ -588,6 +644,36 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* GABARITO */
+.q-ref { display:none; margin:0 20px 12px; border-radius:8px; overflow:hidden; border:1px solid var(--border2); }
+.q-ref.open { display:block; }
+.q-ref-header {
+  background:rgba(255,255,255,0.03); padding:7px 12px;
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase; color:var(--soft);
+  border-bottom:1px solid var(--border2);
+}
+.ref-row { display:flex; border-top:1px solid var(--border2); }
+.ref-row:first-of-type { border-top:none; }
+.ref-badge {
+  font-family:'Syne',sans-serif; font-size:10px; font-weight:800;
+  letter-spacing:0.5px; text-transform:uppercase;
+  padding:10px 11px; min-width:78px;
+  display:flex; align-items:flex-start; justify-content:center;
+  border-right:1px solid var(--border2); flex-shrink:0;
+}
+.ref-badge.good { background:rgba(45,212,160,0.07); color:var(--green); }
+.ref-badge.ok   { background:rgba(240,180,41,0.07);  color:var(--gold); }
+.ref-badge.bad  { background:rgba(248,113,113,0.07); color:var(--red); }
+.ref-text { font-size:12.5px; color:var(--soft); line-height:1.6; padding:10px 12px; background:rgba(0,0,0,0.12); font-style:italic; }
+.q-ref-toggle {
+  background:none; border:1px solid var(--border); border-radius:6px;
+  padding:2px 8px; font-size:11px; color:var(--muted); cursor:pointer;
+  flex-shrink:0; transition:all 0.15s; margin-top:1px;
+  font-family:'DM Sans',sans-serif;
+}
+.q-ref-toggle:hover { border-color:var(--green); color:var(--green); }
 
 @media (max-width: 900px) {
   .sidebar { display: none; }
@@ -1339,6 +1425,155 @@ function updateSidebar() {
 
 // ─── SET TODAY DATE ───
 document.getElementById('data').valueAsDate = new Date();
+
+// ─── GABARITOS DE REFERÊNCIA ───
+const gabaritos = {
+  'Q01': {
+    good: 'Tem método concreto: Pomodoro, blocos de horário, Notion, lista de tarefas priorizadas por prazo. Cita ferramenta real.',
+    ok:   'Organiza mentalmente ou usa anotações básicas. Sem método estruturado mas funciona.',
+    bad:  'Resposta vaga: "vou fazendo conforme aparece" ou não tem nenhuma rotina definida.'
+  },
+  'Q02': {
+    good: 'Admite dificuldade com autoconsciência e descreve o que mudou: mudou ambiente, criou horário fixo, usou técnica específica.',
+    ok:   'Admite dificuldade mas a solução é genérica ou ainda não totalmente resolvida.',
+    bad:  'Nega qualquer dificuldade ("nunca tive problema") ou admite que ainda não consegue trabalhar bem em casa.'
+  },
+  'Q03': {
+    good: 'Exemplo concreto onde identificou o problema, agiu e teve resultado mensurável. Fechou o ciclo: viu → pensou → executou.',
+    ok:   'Percebeu a tarefa repetitiva e tentou melhorar, mas não chegou a implementar de fato.',
+    bad:  'Nunca pensou nisso ou diz que "não é seu papel" questionar processos.'
+  },
+  'Q04': {
+    good: 'Primeira reação é estruturar para facilitar os próximos meses: checklist, template, anotação do passo a passo.',
+    ok:   'Pensa em fazer bem na primeira vez, mas sem pensar na recorrência futura.',
+    bad:  'Só pensa em entregar aquela vez. Não tem visão de processo recorrente.'
+  },
+  'Q05': {
+    good: 'Iniciativa genuína e espontânea: curso, ferramenta, habilidade aprendida sem ninguém pedir. Descreve o que e por quê.',
+    ok:   'Aprendeu algo por conta própria mas motivado por uma necessidade pontual, não por curiosidade pura.',
+    bad:  'Não consegue dar um exemplo real de aprendizado autodirigido.'
+  },
+  'Q06': {
+    good: 'Usa fórmulas avançadas (PROCV, SOMASES, tabela dinâmica) e dá exemplo prático de uso no trabalho ou estudo.',
+    ok:   'Usa Excel com fórmulas básicas, nunca foi além de SOMA e filtros simples.',
+    bad:  'Pouco ou nenhum uso de Excel. Não sabe o que é PROCV.'
+  },
+  'Q07': {
+    good: 'Abordagem proativa: explorar o sistema, buscar tutoriais, testar. Não espera alguém ensinar tudo.',
+    ok:   'Pediria ajuda ao supervisor mas também tentaria explorar por conta.',
+    bad:  'Reação de susto ou dependência total de treinamento formal antes de usar qualquer coisa.'
+  },
+  'Q08': {
+    good: 'Disposição genuína e imediata. "Ajudaria no que puder e aprenderia no caminho."',
+    ok:   'Ajudaria mas com ressalvas ("dependeria do que é", "se eu conseguir").',
+    bad:  'Hesitação clara ou recusa velada. Não está disposto a sair da sua área.'
+  },
+  'Q09': {
+    good: 'Prefere autonomia ou equilíbrio entre os dois. Sabe trabalhar sem precisar de direção constante.',
+    ok:   'Prefere mais direção no início mas consegue ganhar autonomia com o tempo.',
+    bad:  'Precisa de tudo detalhado e definido. Alta dependência de orientação contínua.'
+  },
+  'Q10': {
+    good: 'Critérios claros de priorização: prazo, impacto, irreversibilidade. Sabe o que deixar para depois e por quê.',
+    ok:   'Priorizou por intuição e deu certo, mas sem um critério explícito.',
+    bad:  'Se travou, não priorizou ou esperou alguém dizer o que fazer.'
+  },
+  'Q11': {
+    good: 'Responde com naturalidade e alinhamento. Entende que urgências coletivas fazem parte do trabalho.',
+    ok:   'Aceita mas com condicionantes razoáveis ("desde que seja raro" ou "com aviso prévio").',
+    bad:  'Hesitação forte ou pergunta "mas com que frequência?" — sinal de desalinhamento cultural.'
+  },
+  'Q12': {
+    good: 'Fala de aprendizado genuíno, crescimento técnico, autonomia. A motivação vem de dentro, não de reconhecimento externo.',
+    ok:   'Quer crescer mas a motivação é mais voltada a currículo e mercado do que ao aprendizado em si.',
+    bad:  'Não tem resposta clara ou depende de alguém puxar para se desenvolver.'
+  },
+  'Q13': {
+    good: 'Pesquisou sobre a vaga. Entende que BPO é terceirização de processos financeiros: contas a pagar/receber, conciliação, fluxo de caixa.',
+    ok:   'Tem noção geral mas superficial. Sabe que envolve finanças mas não detalhes.',
+    bad:  'Não pesquisou sobre a vaga ou responde algo completamente fora ("é tipo TI").'
+  },
+  'Q14': {
+    good: 'Vai além de "fazer bem feito": proatividade, antecipar problemas, clareza na comunicação, ser parceiro e não só prestador.',
+    ok:   'Cita qualidade do serviço e relacionamento, mas de forma genérica.',
+    bad:  'Só menciona "fazer o trabalho direito" sem enxergar a dimensão de relacionamento.'
+  },
+  'Q15': {
+    good: 'Agiria imediatamente: entraria em contato com o cliente, explicaria de forma simples e evitaria a decisão equivocada.',
+    ok:   'Avisaria o cliente mas com insegurança sobre como abordar.',
+    bad:  'Ficaria quieto achando que não é problema seu ou esperaria alguém superior resolver.'
+  },
+  'Q16': {
+    good: 'Ponto onde receitas cobrem todos os custos. A partir daí começa o lucro.',
+    ok:   'Já ouviu falar, entende que é "zero a zero" mas não sabe definir com precisão.',
+    bad:  'Nunca ouviu falar e sem curiosidade em entrevista para área financeira.'
+  },
+  'Q17': {
+    good: 'Resultado operacional antes de juros, impostos, depreciação e amortização. Mostra capacidade operacional real.',
+    ok:   'Sabe que é uma métrica de resultado mas não sabe detalhar as siglas.',
+    bad:  'Inventa uma definição sem admitir que não sabe — falta de honestidade intelectual.'
+  },
+  'Q18': {
+    good: 'O que sobra da receita após custos variáveis — essa sobra contribui para cobrir fixos e depois gerar lucro.',
+    ok:   'Tem noção de que é uma margem ligada ao produto mas confunde com lucro bruto.',
+    bad:  'Confunde com lucro líquido ou demonstra total desinteresse pelo conceito.'
+  },
+  'Q19': {
+    good: 'Registro de entradas e saídas de dinheiro. Pode ser positivo mesmo com lucro negativo e vice-versa.',
+    ok:   'Sabe que é controle do que entra e sai, mas não diferencia de lucro contábil.',
+    bad:  'Confunde com extrato bancário ou com lucro. Não entende a diferença.'
+  },
+  'Q20': {
+    good: 'Estimativa de entradas e saídas futuras. Permite antecipar decisões em vez de apagar incêndio.',
+    ok:   'Imagina que é uma planilha de estimativas futuras. Intuição correta, sem profundidade.',
+    bad:  'Nunca ouviu falar e zero curiosidade em entrevista para BPO financeiro.'
+  }
+};
+
+// Injeta gabarito em cada card
+document.querySelectorAll('.q-card').forEach(card => {
+  const badge = card.querySelector('.q-num-badge');
+  if (!badge) return;
+  const qnum = badge.textContent.trim();
+  const gab = gabaritos[qnum];
+  if (!gab) return;
+
+  // Adiciona botão de gabarito no q-top
+  const qtop = card.querySelector('.q-top');
+  const refBtn = document.createElement('button');
+  refBtn.className = 'q-ref-toggle';
+  refBtn.textContent = '📋 Gabarito';
+  refBtn.onclick = function() { toggleRef(this); };
+  qtop.appendChild(refBtn);
+
+  // Cria bloco do gabarito após q-tip-box
+  const tipBox = card.querySelector('.q-tip-box');
+  const refDiv = document.createElement('div');
+  refDiv.className = 'q-ref';
+  refDiv.innerHTML = `
+    <div class="q-ref-header">Respostas de Referência</div>
+    <div class="ref-row">
+      <div class="ref-badge good">✓ Ótimo</div>
+      <div class="ref-text">${gab.good}</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-badge ok">~ Ok</div>
+      <div class="ref-text">${gab.ok}</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-badge bad">✗ Alerta</div>
+      <div class="ref-text">${gab.bad}</div>
+    </div>
+  `;
+  tipBox.insertAdjacentElement('afterend', refDiv);
+});
+
+function toggleRef(btn) {
+  const card = btn.closest('.q-card');
+  const ref = card.querySelector('.q-ref');
+  ref.classList.toggle('open');
+  btn.textContent = ref.classList.contains('open') ? '✕ Fechar' : '📋 Gabarito';
+}
 
 // ─── PDF GENERATION ───
 function getRating(card) {
