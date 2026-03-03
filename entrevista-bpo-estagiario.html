@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrevista BPO — Outtax</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0b0d12;
+  --surface: #111318;
+  --card: #161a24;
+  --card2: #1c2130;
+  --border: #232838;
+  --border2: #2d3449;
+  --accent: #3d7fff;
+  --accent2: #6c47ff;
+  --gold: #f0b429;
+  --green: #2dd4a0;
+  --red: #f87171;
+  --text: #e2e6f0;
+  --muted: #5a6278;
+  --soft: #8892a8;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+/* ─── LAYOUT ─── */
+.app { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo-tag {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.logo-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 12px 8px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 13px;
+  color: var(--soft);
+  text-decoration: none;
+}
+
+.nav-item:hover { background: var(--card); color: var(--text); }
+.nav-item.active { background: rgba(61,127,255,0.1); color: var(--accent); border: 1px solid rgba(61,127,255,0.15); }
+
+.nav-item .nav-icon { font-size: 14px; flex-shrink: 0; }
+
+.nav-progress {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border2);
+  margin-left: auto;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.nav-progress.done {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.nav-progress.done::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #000;
+  font-weight: 700;
+}
+
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-pdf {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-pdf:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-pdf:active { transform: translateY(0); }
+
+.btn-pdf:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 40px 48px 80px;
+  max-width: 860px;
+}
+
+/* HEADER FORM */
+.header-form {
+  margin-bottom: 48px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--border);
+  animation: fadeDown 0.5s ease both;
+}
+
+.header-form h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.header-form h1 span {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-form p {
+  font-size: 14px;
+  color: var(--soft);
+  margin-bottom: 24px;
+}
+
+.candidate-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-group label {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field-group input, .field-group select {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.field-group input:focus, .field-group select:focus {
+  border-color: var(--accent);
+}
+
+.field-group input::placeholder { color: var(--muted); }
+
+/* SECTION */
+.section {
+  margin-bottom: 48px;
+  animation: fadeUp 0.5s ease both;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+
+.section-meta { flex: 1; }
+
+.section-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted);
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px; font-weight: 700;
+  color: #fff;
+}
+
+.section-completion {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  color: var(--muted);
+  padding: 4px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+}
+
+.section-completion.complete { color: var(--green); border-color: rgba(45,212,160,0.25); background: rgba(45,212,160,0.07); }
+
+/* QUESTION CARD */
+.q-wrap { display: flex; flex-direction: column; gap: 14px; }
+
+.q-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.q-card:focus-within { border-color: var(--accent); }
+
+.q-top {
+  padding: 16px 20px 12px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.q-num-badge {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent);
+  background: rgba(61,127,255,0.1);
+  border: 1px solid rgba(61,127,255,0.2);
+  border-radius: 6px;
+  padding: 2px 7px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.q-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  flex: 1;
+}
+
+.q-tip-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  margin-top: 1px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.q-tip-toggle:hover { border-color: var(--gold); color: var(--gold); }
+
+.q-tip-box {
+  display: none;
+  margin: 0 20px 12px;
+  background: rgba(240,180,41,0.05);
+  border: 1px solid rgba(240,180,41,0.15);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: var(--soft);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.q-tip-box.open { display: block; }
+.q-tip-box strong { color: var(--gold); font-style: normal; font-weight: 500; }
+
+/* CONCEPT KNOWLEDGE */
+.concept-knowledge {
+  padding: 0 20px 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.concept-knowledge label {
+  font-size: 12px;
+  color: var(--soft);
+  margin-right: 4px;
+}
+
+.know-btn {
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--border2);
+  background: none;
+  font-size: 12px;
+  color: var(--soft);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.know-btn:hover { border-color: var(--soft); color: var(--text); }
+.know-btn.active-good { border-color: var(--green); background: rgba(45,212,160,0.1); color: var(--green); }
+.know-btn.active-ok   { border-color: var(--gold);  background: rgba(240,180,41,0.1);  color: var(--gold);  }
+.know-btn.active-bad  { border-color: var(--red);   background: rgba(248,113,113,0.1); color: var(--red);   }
+
+/* TEXTAREA */
+.q-textarea {
+  width: 100%;
+  background: var(--card2);
+  border: none;
+  border-top: 1px solid var(--border);
+  padding: 14px 20px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 300;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 90px;
+  outline: none;
+  transition: background 0.15s;
+}
+
+.q-textarea:focus { background: #1e2436; }
+.q-textarea::placeholder { color: var(--muted); }
+
+/* RATING */
+.q-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-top: 1px solid var(--border);
+  background: rgba(0,0,0,0.15);
+}
+
+.rating-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+.star {
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--border2);
+  transition: color 0.1s, transform 0.1s;
+  line-height: 1;
+}
+
+.star:hover, .star.on { color: var(--gold); transform: scale(1.15); }
+
+/* DIVIDER */
+.bloco-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 48px 0;
+}
+
+.bloco-divider-line { flex: 1; height: 1px; background: var(--border); }
+
+.bloco-divider-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 5px 16px;
+  border: 1px solid rgba(240,180,41,0.2);
+  border-radius: 100px;
+}
+
+/* FINAL NOTE */
+.final-note {
+  background: linear-gradient(135deg, rgba(61,127,255,0.06), rgba(108,71,255,0.06));
+  border: 1px solid rgba(61,127,255,0.2);
+  border-radius: 14px;
+  padding: 24px;
+  margin-top: 48px;
+}
+
+.final-note h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.final-textarea {
+  width: 100%;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 300;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 100px;
+  outline: none;
+  margin-top: 10px;
+}
+
+.final-textarea::placeholder { color: var(--muted); }
+.final-textarea:focus { border-color: var(--accent); }
+
+.final-verdict {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.verdict-btn {
+  padding: 8px 20px;
+  border-radius: 100px;
+  border: 1px solid var(--border2);
+  background: none;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--soft);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.verdict-btn:hover { color: var(--text); border-color: var(--soft); }
+.verdict-btn.v-aprovado { border-color: var(--green); color: var(--green); background: rgba(45,212,160,0.08); }
+.verdict-btn.v-pendente { border-color: var(--gold);  color: var(--gold);  background: rgba(240,180,41,0.08); }
+.verdict-btn.v-reprovado{ border-color: var(--red);   color: var(--red);   background: rgba(248,113,113,0.08); }
+
+/* SECTION COLORS */
+.s1 .section-icon { background: rgba(61,127,255,0.1); }
+.s2 .section-icon { background: rgba(108,71,255,0.1); }
+.s3 .section-icon { background: rgba(45,212,160,0.1); }
+.s4 .section-icon { background: rgba(240,180,41,0.1); }
+.s5 .section-icon { background: rgba(248,113,113,0.1); }
+.s6 .section-icon { background: rgba(240,180,41,0.08); }
+.s7 .section-icon { background: rgba(45,212,160,0.08); }
+
+/* ANIMATIONS */
+@keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(12px)}  to{opacity:1;transform:translateY(0)} }
+
+.section:nth-child(1){animation-delay:.05s}
+.section:nth-child(2){animation-delay:.1s}
+.section:nth-child(3){animation-delay:.15s}
+.section:nth-child(4){animation-delay:.2s}
+.section:nth-child(5){animation-delay:.25s}
+.section:nth-child(6){animation-delay:.3s}
+.section:nth-child(7){animation-delay:.35s}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: var(--green);
+  color: #000;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { padding: 24px 20px 60px; }
+  .candidate-fields { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 580px) {
+  .candidate-fields { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-tag">Outtax</div>
+      <div class="logo-title">Roteiro de<br>Entrevista</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Blocos</div>
+      <a class="nav-item active" href="#bloco1" onclick="setActive(this)">
+        <span class="nav-icon">🏠</span> Home Office
+        <span class="nav-progress" id="prog-1"></span>
+      </a>
+      <a class="nav-item" href="#bloco2" onclick="setActive(this)">
+        <span class="nav-icon">⚙️</span> Otimização
+        <span class="nav-progress" id="prog-2"></span>
+      </a>
+      <a class="nav-item" href="#bloco3" onclick="setActive(this)">
+        <span class="nav-icon">📚</span> Tecnologia
+        <span class="nav-progress" id="prog-3"></span>
+      </a>
+      <a class="nav-item" href="#bloco4" onclick="setActive(this)">
+        <span class="nav-icon">🤝</span> Versatilidade
+        <span class="nav-progress" id="prog-4"></span>
+      </a>
+      <a class="nav-item" href="#bloco5" onclick="setActive(this)">
+        <span class="nav-icon">🔥</span> Cultura
+        <span class="nav-progress" id="prog-5"></span>
+      </a>
+      <div class="nav-section-label">Bloco Técnico</div>
+      <a class="nav-item" href="#bloco6" onclick="setActive(this)">
+        <span class="nav-icon">💼</span> BPO & Cliente
+        <span class="nav-progress" id="prog-6"></span>
+      </a>
+      <a class="nav-item" href="#bloco7" onclick="setActive(this)">
+        <span class="nav-icon">📊</span> Conceitos
+        <span class="nav-progress" id="prog-7"></span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-pdf" onclick="gerarPDF()" id="btnPDF">
+        <span>📄</span> Gerar PDF
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HEADER -->
+    <div class="header-form">
+      <h1>Entrevista <span>BPO</span></h1>
+      <p>Preencha os dados do candidato e registre as respostas durante a entrevista.</p>
+      <div class="candidate-fields">
+        <div class="field-group">
+          <label>Nome do Candidato</label>
+          <input type="text" id="nome" placeholder="Ex: Maria Silva" oninput="updateSidebar()">
+        </div>
+        <div class="field-group">
+          <label>Cargo Aplicado</label>
+          <input type="text" id="cargo" placeholder="Ex: Estagiário BPO" value="Estagiário BPO Financeiro">
+        </div>
+        <div class="field-group">
+          <label>Data da Entrevista</label>
+          <input type="date" id="data">
+        </div>
+        <div class="field-group">
+          <label>Entrevistador</label>
+          <input type="text" id="entrevistador" placeholder="Seu nome">
+        </div>
+        <div class="field-group">
+          <label>Modalidade</label>
+          <select id="modalidade">
+            <option value="Online (Google Meet)">Online (Google Meet)</option>
+            <option value="Online (Zoom)">Online (Zoom)</option>
+            <option value="Online (Teams)">Online (Teams)</option>
+            <option value="Presencial">Presencial</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Etapa</label>
+          <select id="etapa">
+            <option value="1ª Entrevista">1ª Entrevista</option>
+            <option value="2ª Entrevista">2ª Entrevista</option>
+            <option value="Entrevista Final">Entrevista Final</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCO 1 -->
+    <div class="section s1" id="bloco1">
+      <div class="section-header">
+        <div class="section-icon">🏠</div>
+        <div class="section-meta">
+          <div class="section-num">Bloco 01</div>
+          <div class="section-title">Home Office & Organização</div>
+        </div>
+        <div class="section-completion" id="comp-1">0/2</div>
+      </div>
+      <div class="q-wrap">
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q01</span>
+            <span class="q-text">Como você organiza sua rotina quando está trabalhando de casa? Usa alguma ferramenta ou método específico?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Candidatos sem resposta concreta tendem a se perder no remoto. Procure exemplos reais (Notion, blocos de horário, lista etc.), não respostas genéricas.
+          </div>
+          <textarea class="q-textarea" data-block="1" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q02</span>
+            <span class="q-text">Você já teve dificuldade em se concentrar ou manter disciplina em casa? Como lidou com isso?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Autoconsciência e capacidade de ajuste. Quem nega toda dificuldade ou quem diz que "não consegue trabalhar em casa" são alertas.
+          </div>
+          <textarea class="q-textarea" data-block="1" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BLOCO 2 -->
+    <div class="section s2" id="bloco2">
+      <div class="section-header">
+        <div class="section-icon">⚙️</div>
+        <div class="section-meta">
+          <div class="section-num">Bloco 02</div>
+          <div class="section-title">Mentalidade de Otimização</div>
+        </div>
+        <div class="section-completion" id="comp-2">0/2</div>
+      </div>
+      <div class="q-wrap">
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q03</span>
+            <span class="q-text">Você já identificou uma tarefa repetitiva e pensou em como fazê-la mais rápido ou melhor? O que você fez?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Esta é a pergunta mais importante do roteiro. Separa quem tem mentalidade de otimização de quem apenas executa. Explore com "e aí, o que aconteceu depois?"
+          </div>
+          <textarea class="q-textarea" data-block="2" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q04</span>
+            <span class="q-text">Se você recebesse uma tarefa recorrente todo mês, qual seria seu primeiro pensamento ao recebê-la pela primeira vez?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Respostas ideais: "já penso em organizar para facilitar da próxima vez" ou "vejo se tem como automatizar". Fuja de quem só pensa em "fazer direito".
+          </div>
+          <textarea class="q-textarea" data-block="2" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BLOCO 3 -->
+    <div class="section s3" id="bloco3">
+      <div class="section-header">
+        <div class="section-icon">📚</div>
+        <div class="section-meta">
+          <div class="section-num">Bloco 03</div>
+          <div class="section-title">Aprendizado & Tecnologia</div>
+        </div>
+        <div class="section-completion" id="comp-3">0/3</div>
+      </div>
+      <div class="q-wrap">
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q05</span>
+            <span class="q-text">Você já aprendeu alguma coisa por conta própria, sem ninguém mandar? Me dá um exemplo prático.</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> O importante é a iniciativa ter partido do candidato, não de uma obrigação. Pode ser um curso, ferramenta, habilidade qualquer.
+          </div>
+          <textarea class="q-textarea" data-block="3" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q06</span>
+            <span class="q-text">Você tem costume de usar Excel ou planilhas? Já usou alguma fórmula mais avançada ou tentou automatizar algo?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Não precisa ser expert. Mas quem nunca usou PROCV, tabela dinâmica ou algo além de digitar dados pode ter dificuldade no dia a dia do BPO.
+          </div>
+          <textarea class="q-textarea" data-block="3" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q07</span>
+            <span class="q-text">Se eu te pedir para usar um sistema que nunca viu antes (como o Domínio ou Nibo), como você abordaria esse aprendizado?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Curiosidade e abertura à tecnologia. O candidato precisa ter disposição, não medo de telas novas.
+          </div>
+          <textarea class="q-textarea" data-block="3" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BLOCO 4 -->
+    <div class="section s4" id="bloco4">
+      <div class="section-header">
+        <div class="section-icon">🤝</div>
+        <div class="section-meta">
+          <div class="section-num">Bloco 04</div>
+          <div class="section-title">Versatilidade & Equipe</div>
+        </div>
+        <div class="section-completion" id="comp-4">0/2</div>
+      </div>
+      <div class="q-wrap">
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q08</span>
+            <span class="q-text">Se precisasse ajudar em uma área diferente da sua, com urgência e sem tempo para se preparar, como reagiria?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Observe disposição genuína. "Dependeria do que é" ou muita hesitação indicam baixa versatilidade. No escritório, todo mundo joga junto quando precisa.
+          </div>
+          <textarea class="q-textarea" data-block="4" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q09</span>
+            <span class="q-text">Como você prefere receber uma tarefa: tudo detalhado e definido, ou autonomia para decidir como fazer?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Não há resposta errada, mas nossa cultura exige autonomia. Quem precisa de muita direção constante pode travar no home office.
+          </div>
+          <textarea class="q-textarea" data-block="4" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BLOCO 5 -->
+    <div class="section s5" id="bloco5">
+      <div class="section-header">
+        <div class="section-icon">🔥</div>
+        <div class="section-meta">
+          <div class="section-num">Bloco 05</div>
+          <div class="section-title">Pressão, Prazo & Cultura</div>
+        </div>
+        <div class="section-completion" id="comp-5">0/3</div>
+      </div>
+      <div class="q-wrap">
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q10</span>
+            <span class="q-text">Já teve uma situação em que tudo estava acumulando ao mesmo tempo? Como você priorizou?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> No BPO financeiro, fechamentos e vencimentos não esperam. Explore: "o que você deixou pra depois e por quê?" revela maturidade de decisão.
+          </div>
+          <textarea class="q-textarea" data-block="5" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q11</span>
+            <span class="q-text">Nossa rotina é 80% home office, mas há momentos em que o time precisa se unir independente do horário. Isso faz sentido pra você?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Seja direto. Prefira quem responde com naturalidade a quem hesita ou pergunta "mas com que frequência?". Alinhamento cultural evita frustrações.
+          </div>
+          <textarea class="q-textarea" data-block="5" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q12</span>
+            <span class="q-text">O que te motivaria a ficar num estágio onde grande parte do crescimento vem de você mesmo buscar?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Revela maturidade e autoconhecimento. Respostas sobre aprendizado genuíno são melhores do que "quero ganhar experiência no mercado".
+          </div>
+          <textarea class="q-textarea" data-block="5" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DIVIDER TÉCNICO -->
+    <div class="bloco-divider">
+      <div class="bloco-divider-line"></div>
+      <div class="bloco-divider-label">⚡ Bloco Técnico</div>
+      <div class="bloco-divider-line"></div>
+    </div>
+
+    <!-- BLOCO 6 -->
+    <div class="section s6" id="bloco6">
+      <div class="section-header">
+        <div class="section-icon">💼</div>
+        <div class="section-meta">
+          <div class="section-num">Bloco 06</div>
+          <div class="section-title">BPO Financeiro & Relacionamento</div>
+        </div>
+        <div class="section-completion" id="comp-6">0/3</div>
+      </div>
+      <div class="q-wrap">
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q13</span>
+            <span class="q-text">Na sua visão, o que é um serviço de BPO Financeiro? O que você imagina que fazemos no dia a dia?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> É estágio, não espere perfeição. Mas deve entender minimamente: terceirização de processos financeiros, contas a pagar/receber, fluxo de caixa, relatórios. Quem não pesquisou sobre a vaga é sinal ruim.
+          </div>
+          <textarea class="q-textarea" data-block="6" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q14</span>
+            <span class="q-text">O que você acha que faz um cliente continuar confiando e ficando com um escritório contábil por muitos anos?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Respostas interessantes vão além de "fazer bem feito" — proatividade, clareza, antecipar problemas, ser parceiro e não só prestador. Maturidade sobre relacionamento B2B.
+          </div>
+          <textarea class="q-textarea" data-block="6" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q15</span>
+            <span class="q-text">Se você percebesse que um cliente interpretou errado um relatório seu e estava tomando uma decisão equivocada — o que faria?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>O que avaliar:</strong> Proatividade e responsabilidade. O candidato ideal não ficaria quieto. Deve mostrar que entraria em contato e ajudaria o cliente a entender — isso é retenção na prática.
+          </div>
+          <textarea class="q-textarea" data-block="6" placeholder="Anote a resposta do candidato aqui..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BLOCO 7 -->
+    <div class="section s7" id="bloco7">
+      <div class="section-header">
+        <div class="section-icon">📊</div>
+        <div class="section-meta">
+          <div class="section-num">Bloco 07</div>
+          <div class="section-title">Conceitos Técnicos Financeiros</div>
+        </div>
+        <div class="section-completion" id="comp-7">0/5</div>
+      </div>
+      <div class="q-wrap">
+
+        <!-- Q16 Ponto de Equilíbrio -->
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q16</span>
+            <span class="q-text">O que é <strong>Ponto de Equilíbrio (Breakeven)</strong>? Você já ouviu falar?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>Definição:</strong> É o ponto onde receitas = custos totais. A empresa não tem lucro nem prejuízo. Abaixo: vermelho. Acima: lucro. <br>
+            <strong>✓ Ótimo:</strong> "Ponto onde a empresa cobre todos os custos, a partir daí qualquer receita vira lucro." <br>
+            <strong>~ Ok:</strong> "Já ouvi, acho que é quando está no zero a zero." <br>
+            <strong>✗ Alerta:</strong> Nunca ouviu e sem curiosidade.
+          </div>
+          <div class="concept-knowledge">
+            <label>Conhece?</label>
+            <button class="know-btn" onclick="setKnow(this, 'good')">✓ Conhece bem</button>
+            <button class="know-btn" onclick="setKnow(this, 'ok')">~ Já ouviu</button>
+            <button class="know-btn" onclick="setKnow(this, 'bad')">✗ Não conhece</button>
+          </div>
+          <textarea class="q-textarea" data-block="7" placeholder="Anote a resposta / observações..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <!-- Q17 EBITDA -->
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q17</span>
+            <span class="q-text">O que é <strong>EBITDA</strong>? Você sabe o que a sigla significa?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>Definição:</strong> Lucro antes de juros, impostos, depreciação e amortização (Earnings Before Interest, Taxes, Depreciation and Amortization). Mostra a capacidade operacional real da empresa. <br>
+            <strong>✓ Ótimo:</strong> "Resultado operacional antes de juros e impostos, sem influência de dívidas ou contabilidade." <br>
+            <strong>~ Ok:</strong> "Sei que é uma métrica de resultado, mas não sei detalhar as siglas." <br>
+            <strong>✗ Alerta:</strong> Inventa definição sem admitir incerteza.
+          </div>
+          <div class="concept-knowledge">
+            <label>Conhece?</label>
+            <button class="know-btn" onclick="setKnow(this, 'good')">✓ Conhece bem</button>
+            <button class="know-btn" onclick="setKnow(this, 'ok')">~ Já ouviu</button>
+            <button class="know-btn" onclick="setKnow(this, 'bad')">✗ Não conhece</button>
+          </div>
+          <textarea class="q-textarea" data-block="7" placeholder="Anote a resposta / observações..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <!-- Q18 Margem de Contribuição -->
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q18</span>
+            <span class="q-text">O que é <strong>Margem de Contribuição</strong>?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>Definição:</strong> O que sobra da receita após pagar os custos variáveis. Essa sobra "contribui" para pagar custos fixos e depois gerar lucro. <br>
+            <strong>✓ Ótimo:</strong> "Sobra da receita após os custos variáveis — essa margem cobre os custos fixos e depois gera lucro." <br>
+            <strong>~ Ok:</strong> "Sei que é uma margem ligada ao produto, mas confundo com lucro bruto às vezes." <br>
+            <strong>✗ Alerta:</strong> Confunde com margem de lucro líquido.
+          </div>
+          <div class="concept-knowledge">
+            <label>Conhece?</label>
+            <button class="know-btn" onclick="setKnow(this, 'good')">✓ Conhece bem</button>
+            <button class="know-btn" onclick="setKnow(this, 'ok')">~ Já ouviu</button>
+            <button class="know-btn" onclick="setKnow(this, 'bad')">✗ Não conhece</button>
+          </div>
+          <textarea class="q-textarea" data-block="7" placeholder="Anote a resposta / observações..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <!-- Q19 Fluxo de Caixa -->
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q19</span>
+            <span class="q-text">O que é <strong>Fluxo de Caixa</strong> e qual a diferença para o lucro?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>Definição:</strong> Controle de tudo que entra e sai do caixa. Uma empresa pode ter lucro no papel e estar sem dinheiro — o fluxo mostra a realidade financeira do momento. <br>
+            <strong>✓ Ótimo:</strong> "Registro de entradas e saídas de dinheiro — pode ser positivo ou negativo e não necessariamente reflete o lucro contábil." <br>
+            <strong>~ Ok:</strong> "É o controle do que entra e sai, mas não sei diferenciar dos outros indicadores." <br>
+            <strong>✗ Alerta:</strong> Confunde com extrato bancário ou com lucro.
+          </div>
+          <div class="concept-knowledge">
+            <label>Conhece?</label>
+            <button class="know-btn" onclick="setKnow(this, 'good')">✓ Conhece bem</button>
+            <button class="know-btn" onclick="setKnow(this, 'ok')">~ Já ouviu</button>
+            <button class="know-btn" onclick="setKnow(this, 'bad')">✗ Não conhece</button>
+          </div>
+          <textarea class="q-textarea" data-block="7" placeholder="Anote a resposta / observações..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+        <!-- Q20 Projeção -->
+        <div class="q-card">
+          <div class="q-top">
+            <span class="q-num-badge">Q20</span>
+            <span class="q-text">O que é uma <strong>Projeção de Fluxo de Caixa</strong> e para que serve?</span>
+            <button class="q-tip-toggle" onclick="toggleTip(this)">💡 Dica</button>
+          </div>
+          <div class="q-tip-box">
+            <strong>Definição:</strong> Estimativa de entradas e saídas futuras (próximos 30, 90 ou 180 dias). Permite antecipar problemas: se vai faltar dinheiro em 60 dias, o gestor sabe agora para agir. É uma das entregas mais valorizadas no BPO. <br>
+            <strong>✓ Ótimo:</strong> "Previsão do que vai entrar e sair — permite decisões antecipadas em vez de apagar incêndio." <br>
+            <strong>~ Ok:</strong> "Imagino que seja uma planilha de estimativas futuras." <br>
+            <strong>✗ Alerta:</strong> Nunca ouviu e zero curiosidade em entrevista para BPO financeiro.
+          </div>
+          <div class="concept-knowledge">
+            <label>Conhece?</label>
+            <button class="know-btn" onclick="setKnow(this, 'good')">✓ Conhece bem</button>
+            <button class="know-btn" onclick="setKnow(this, 'ok')">~ Já ouviu</button>
+            <button class="know-btn" onclick="setKnow(this, 'bad')">✗ Não conhece</button>
+          </div>
+          <textarea class="q-textarea" data-block="7" placeholder="Anote a resposta / observações..." oninput="updateProgress(this)"></textarea>
+          <div class="q-rating">
+            <span class="rating-label">Avaliação</span>
+            <span class="star" onclick="setRating(this, 1)">★</span>
+            <span class="star" onclick="setRating(this, 2)">★</span>
+            <span class="star" onclick="setRating(this, 3)">★</span>
+            <span class="star" onclick="setRating(this, 4)">★</span>
+            <span class="star" onclick="setRating(this, 5)">★</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- NOTA FINAL -->
+    <div class="final-note">
+      <h3>📝 Observações Finais & Veredicto</h3>
+      <p style="font-size:13px; color:var(--soft); line-height:1.6;">Registre impressões gerais, pontos de atenção, potencial percebido e qualquer detalhe relevante que não coube nas perguntas anteriores.</p>
+      <textarea class="final-textarea" id="obs-final" placeholder="Ex: Candidato demonstrou boa capacidade de comunicação, mas hesitou bastante nas questões de tecnologia. Perfil mais voltado a execução do que a inovação..."></textarea>
+      <p style="font-size:12px; color:var(--muted); margin-top:12px; margin-bottom:8px; font-family:'Syne',sans-serif; font-weight:700; letter-spacing:1px; text-transform:uppercase;">Veredicto</p>
+      <div class="final-verdict">
+        <button class="verdict-btn" onclick="setVerdict(this, 'Aprovado — Avançar para próxima etapa')">✅ Aprovado</button>
+        <button class="verdict-btn" onclick="setVerdict(this, 'Em análise — Aguardando comparativo com outros candidatos')">⏳ Em análise</button>
+        <button class="verdict-btn" onclick="setVerdict(this, 'Reprovado — Não segue para próxima etapa')">❌ Reprovado</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">📄 PDF gerado com sucesso!</div>
+
+<script>
+// ─── ESTADO GLOBAL ───
+let verdictValue = '';
+
+// ─── NAV ACTIVE ───
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── TIP TOGGLE ───
+function toggleTip(btn) {
+  const card = btn.closest('.q-card');
+  const tip = card.querySelector('.q-tip-box');
+  tip.classList.toggle('open');
+  btn.textContent = tip.classList.contains('open') ? '✕ Fechar' : '💡 Dica';
+}
+
+// ─── STAR RATING ───
+function setRating(star, val) {
+  const row = star.closest('.q-rating');
+  const stars = row.querySelectorAll('.star');
+  stars.forEach((s, i) => s.classList.toggle('on', i < val));
+  row.dataset.rating = val;
+}
+
+// ─── KNOW BUTTONS ───
+function setKnow(btn, level) {
+  const group = btn.closest('.concept-knowledge');
+  group.querySelectorAll('.know-btn').forEach(b => b.classList.remove('active-good','active-ok','active-bad'));
+  btn.classList.add('active-' + level);
+}
+
+// ─── PROGRESS TRACKING ───
+const blockTotals = {1:2, 2:2, 3:3, 4:2, 5:3, 6:3, 7:5};
+
+function updateProgress(textarea) {
+  const block = textarea.dataset.block;
+  const allTA = document.querySelectorAll(`textarea[data-block="${block}"]`);
+  const filled = [...allTA].filter(t => t.value.trim().length > 3).length;
+  const total = blockTotals[block];
+  const comp = document.getElementById(`comp-${block}`);
+  comp.textContent = `${filled}/${total}`;
+  comp.classList.toggle('complete', filled === total);
+  const prog = document.getElementById(`prog-${block}`);
+  prog.classList.toggle('done', filled === total);
+}
+
+// ─── VERDICT ───
+function setVerdict(btn, val) {
+  verdictValue = val;
+  document.querySelectorAll('.verdict-btn').forEach(b => b.classList.remove('v-aprovado','v-pendente','v-reprovado'));
+  if (val.includes('Aprovado')) btn.classList.add('v-aprovado');
+  else if (val.includes('análise')) btn.classList.add('v-pendente');
+  else btn.classList.add('v-reprovado');
+}
+
+// ─── UPDATE SIDEBAR NAME ───
+function updateSidebar() {
+  // nothing needed here — kept for extensibility
+}
+
+// ─── SET TODAY DATE ───
+document.getElementById('data').valueAsDate = new Date();
+
+// ─── PDF GENERATION ───
+function getRating(card) {
+  const row = card.querySelector('.q-rating');
+  return row ? (parseInt(row.dataset.rating) || 0) : 0;
+}
+
+function getStars(n) {
+  return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+
+function getKnow(card) {
+  const active = card.querySelector('.know-btn.active-good, .know-btn.active-ok, .know-btn.active-bad');
+  if (!active) return '';
+  if (active.classList.contains('active-good')) return 'Conhece bem';
+  if (active.classList.contains('active-ok')) return 'Já ouviu falar';
+  return 'Não conhece';
+}
+
+function wrapText(pdf, text, x, y, maxWidth, lineHeight) {
+  const lines = pdf.splitTextToSize(text, maxWidth);
+  lines.forEach(line => {
+    if (y > 270) {
+      pdf.addPage();
+      y = 20;
+    }
+    pdf.text(line, x, y);
+    y += lineHeight;
+  });
+  return y;
+}
+
+async function gerarPDF() {
+  const btn = document.getElementById('btnPDF');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Gerando...';
+
+  await new Promise(r => setTimeout(r, 100));
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  const nome = document.getElementById('nome').value || 'Não informado';
+  const cargo = document.getElementById('cargo').value || 'Não informado';
+  const data = document.getElementById('data').value || '';
+  const entrevistador = document.getElementById('entrevistador').value || 'Não informado';
+  const modalidade = document.getElementById('modalidade').value;
+  const etapa = document.getElementById('etapa').value;
+  const obsFinal = document.getElementById('obs-final').value || '';
+
+  const dataFmt = data ? new Date(data + 'T12:00:00').toLocaleDateString('pt-BR') : 'Não informado';
+
+  const W = 210;
+  const margin = 18;
+  const contentW = W - margin * 2;
+  let y = 0;
+
+  // ─── CAPA ───
+  pdf.setFillColor(11, 13, 18);
+  pdf.rect(0, 0, W, 297, 'F');
+
+  // Accent bar
+  pdf.setFillColor(61, 127, 255);
+  pdf.rect(0, 0, 6, 297, 'F');
+
+  // Logo
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(9);
+  pdf.setTextColor(61, 127, 255);
+  pdf.text('OUTTAX CONTABILIDADE', margin + 4, 28);
+
+  pdf.setFontSize(28);
+  pdf.setTextColor(255, 255, 255);
+  pdf.text('Relatório de', margin + 4, 48);
+  pdf.text('Entrevista', margin + 4, 62);
+
+  pdf.setFontSize(11);
+  pdf.setTextColor(136, 146, 168);
+  pdf.text('BPO Financeiro · ' + etapa, margin + 4, 74);
+
+  // Divider
+  pdf.setDrawColor(35, 40, 56);
+  pdf.setLineWidth(0.5);
+  pdf.line(margin + 4, 82, W - margin, 82);
+
+  // Candidate info box
+  pdf.setFillColor(22, 26, 36);
+  pdf.roundedRect(margin + 4, 90, contentW - 4, 70, 3, 3, 'F');
+
+  pdf.setFontSize(9);
+  pdf.setTextColor(90, 98, 120);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('CANDIDATO', margin + 12, 104);
+
+  pdf.setFontSize(18);
+  pdf.setTextColor(255, 255, 255);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text(nome, margin + 12, 116);
+
+  pdf.setFontSize(10);
+  pdf.setTextColor(136, 146, 168);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text(cargo, margin + 12, 125);
+
+  // Info grid
+  const infoY = 137;
+  pdf.setFontSize(8);
+  pdf.setTextColor(90, 98, 120);
+  pdf.text('DATA', margin + 12, infoY);
+  pdf.text('ENTREVISTADOR', margin + 60, infoY);
+  pdf.text('MODALIDADE', margin + 118, infoY);
+
+  pdf.setFontSize(9);
+  pdf.setTextColor(226, 230, 240);
+  pdf.text(dataFmt, margin + 12, infoY + 7);
+  pdf.text(entrevistador, margin + 60, infoY + 7);
+  pdf.text(modalidade, margin + 118, infoY + 7);
+
+  // Verdict box if set
+  if (verdictValue) {
+    const vColor = verdictValue.includes('Aprovado') ? [45, 212, 160] :
+                   verdictValue.includes('análise') ? [240, 180, 41] : [248, 113, 113];
+    pdf.setFillColor(...vColor);
+    pdf.roundedRect(margin + 4, 170, contentW - 4, 16, 3, 3, 'F');
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(10);
+    pdf.setTextColor(10, 10, 10);
+    pdf.text(verdictValue, margin + 12, 181);
+  }
+
+  // Footer capa
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(8);
+  pdf.setTextColor(90, 98, 120);
+  pdf.text('Documento gerado automaticamente · Outtax Contabilidade', margin + 4, 285);
+  pdf.text('Página 1', W - margin - 15, 285);
+
+  // ─── PÁGINAS DE PERGUNTAS ───
+  const blocos = [
+    { id: 'bloco1', num: '01', titulo: 'Home Office & Organização' },
+    { id: 'bloco2', num: '02', titulo: 'Mentalidade de Otimização' },
+    { id: 'bloco3', num: '03', titulo: 'Aprendizado & Tecnologia' },
+    { id: 'bloco4', num: '04', titulo: 'Versatilidade & Equipe' },
+    { id: 'bloco5', num: '05', titulo: 'Pressão, Prazo & Cultura' },
+    { id: 'bloco6', num: '06', titulo: 'BPO Financeiro & Relacionamento' },
+    { id: 'bloco7', num: '07', titulo: 'Conceitos Técnicos Financeiros' },
+  ];
+
+  let pageNum = 2;
+
+  for (const bloco of blocos) {
+    pdf.addPage();
+
+    // Dark bg
+    pdf.setFillColor(11, 13, 18);
+    pdf.rect(0, 0, W, 297, 'F');
+    pdf.setFillColor(61, 127, 255);
+    pdf.rect(0, 0, 6, 297, 'F');
+
+    y = 20;
+
+    // Block header
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(8);
+    pdf.setTextColor(61, 127, 255);
+    pdf.text('BLOCO ' + bloco.num, margin + 4, y);
+    y += 8;
+
+    pdf.setFontSize(16);
+    pdf.setTextColor(255, 255, 255);
+    pdf.text(bloco.titulo, margin + 4, y);
+    y += 4;
+
+    pdf.setDrawColor(35, 40, 56);
+    pdf.setLineWidth(0.4);
+    pdf.line(margin + 4, y + 2, W - margin, y + 2);
+    y += 10;
+
+    const cards = document.getElementById(bloco.id).querySelectorAll('.q-card');
+
+    cards.forEach((card, idx) => {
+      if (y > 250) {
+        // page footer
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(8);
+        pdf.setTextColor(90, 98, 120);
+        pdf.text(`Página ${pageNum}`, W - margin - 15, 285);
+        pdf.addPage();
+        pageNum++;
+        pdf.setFillColor(11, 13, 18);
+        pdf.rect(0, 0, W, 297, 'F');
+        pdf.setFillColor(61, 127, 255);
+        pdf.rect(0, 0, 6, 297, 'F');
+        y = 20;
+      }
+
+      const qNum = card.querySelector('.q-num-badge')?.textContent?.trim() || '';
+      const qText = card.querySelector('.q-text')?.innerText?.trim() || '';
+      const qAns = card.querySelector('textarea')?.value?.trim() || '';
+      const rating = getRating(card);
+      const know = getKnow(card);
+
+      // Card bg
+      pdf.setFillColor(22, 26, 36);
+      const cardH = Math.max(36, 36 + Math.ceil(qAns.length / 70) * 5 + (know ? 8 : 0));
+      const safeH = Math.min(cardH, 297 - y - 12);
+      pdf.roundedRect(margin + 4, y, contentW - 4, safeH, 2, 2, 'F');
+
+      // Badge
+      pdf.setFillColor(61, 127, 255, 0.15);
+      pdf.setFillColor(20, 40, 80);
+      pdf.roundedRect(margin + 8, y + 5, 16, 6, 1, 1, 'F');
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(7);
+      pdf.setTextColor(100, 160, 255);
+      pdf.text(qNum, margin + 9, y + 10);
+
+      // Stars
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(10);
+      pdf.setTextColor(240, 180, 41);
+      pdf.text(getStars(rating), W - margin - 32, y + 10);
+
+      // Question text
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(9);
+      pdf.setTextColor(210, 218, 235);
+      const qLines = pdf.splitTextToSize(qText, contentW - 40);
+      pdf.text(qLines, margin + 28, y + 10);
+
+      let iy = y + 10 + qLines.length * 5 + 2;
+
+      // Know level
+      if (know) {
+        pdf.setFont('helvetica', 'italic');
+        pdf.setFontSize(8);
+        pdf.setTextColor(90, 98, 120);
+        pdf.text('Nível de conhecimento: ' + know, margin + 8, iy);
+        iy += 6;
+      }
+
+      // Divider
+      pdf.setDrawColor(35, 40, 56);
+      pdf.setLineWidth(0.3);
+      pdf.line(margin + 8, iy, W - margin - 8, iy);
+      iy += 4;
+
+      // Answer
+      if (qAns) {
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(8.5);
+        pdf.setTextColor(136, 146, 168);
+        const aLines = pdf.splitTextToSize(qAns, contentW - 20);
+        aLines.forEach(line => {
+          if (iy > 273) {
+            pdf.setFont('helvetica', 'normal');
+            pdf.setFontSize(8);
+            pdf.setTextColor(90, 98, 120);
+            pdf.text(`Página ${pageNum}`, W - margin - 15, 285);
+            pdf.addPage();
+            pageNum++;
+            pdf.setFillColor(11, 13, 18);
+            pdf.rect(0, 0, W, 297, 'F');
+            pdf.setFillColor(61, 127, 255);
+            pdf.rect(0, 0, 6, 297, 'F');
+            iy = 20;
+          }
+          pdf.text(line, margin + 8, iy);
+          iy += 5;
+        });
+      } else {
+        pdf.setFont('helvetica', 'italic');
+        pdf.setFontSize(8);
+        pdf.setTextColor(60, 68, 85);
+        pdf.text('(sem resposta registrada)', margin + 8, iy);
+        iy += 5;
+      }
+
+      y = iy + 10;
+    });
+
+    // Page footer
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(8);
+    pdf.setTextColor(90, 98, 120);
+    pdf.text('Outtax Contabilidade · Roteiro de Entrevista BPO', margin + 4, 285);
+    pdf.text(`Página ${pageNum}`, W - margin - 15, 285);
+    pageNum++;
+  }
+
+  // ─── PÁGINA FINAL: OBSERVAÇÕES ───
+  pdf.addPage();
+  pdf.setFillColor(11, 13, 18);
+  pdf.rect(0, 0, W, 297, 'F');
+  pdf.setFillColor(61, 127, 255);
+  pdf.rect(0, 0, 6, 297, 'F');
+
+  y = 20;
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(8);
+  pdf.setTextColor(61, 127, 255);
+  pdf.text('CONSIDERAÇÕES FINAIS', margin + 4, y);
+  y += 9;
+
+  pdf.setFontSize(16);
+  pdf.setTextColor(255, 255, 255);
+  pdf.text('Observações & Veredicto', margin + 4, y);
+  y += 4;
+  pdf.setDrawColor(35, 40, 56);
+  pdf.line(margin + 4, y + 2, W - margin, y + 2);
+  y += 12;
+
+  // Veredicto box
+  if (verdictValue) {
+    const vColor = verdictValue.includes('Aprovado') ? [45, 212, 160] :
+                   verdictValue.includes('análise') ? [240, 180, 41] : [248, 113, 113];
+    pdf.setFillColor(...vColor);
+    pdf.roundedRect(margin + 4, y, contentW - 4, 14, 2, 2, 'F');
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(10);
+    pdf.setTextColor(10, 10, 10);
+    pdf.text('VEREDICTO: ' + verdictValue.toUpperCase(), margin + 10, y + 9);
+    y += 22;
+  }
+
+  // Obs box
+  pdf.setFillColor(22, 26, 36);
+  pdf.roundedRect(margin + 4, y, contentW - 4, 100, 3, 3, 'F');
+
+  if (obsFinal) {
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(9);
+    pdf.setTextColor(136, 146, 168);
+    const oLines = pdf.splitTextToSize(obsFinal, contentW - 20);
+    oLines.forEach(line => {
+      pdf.text(line, margin + 10, y + 10);
+      y += 6;
+    });
+  } else {
+    pdf.setFont('helvetica', 'italic');
+    pdf.setFontSize(9);
+    pdf.setTextColor(60, 68, 85);
+    pdf.text('(sem observações registradas)', margin + 10, y + 14);
+  }
+
+  // Final signature area
+  y = 220;
+  pdf.setDrawColor(35, 40, 56);
+  pdf.setLineWidth(0.4);
+  pdf.line(margin + 4, y, margin + 80, y);
+  pdf.line(margin + 100, y, margin + 176, y);
+
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(8);
+  pdf.setTextColor(90, 98, 120);
+  pdf.text('Assinatura do Entrevistador', margin + 4, y + 5);
+  pdf.text('Data / Hora', margin + 100, y + 5);
+  pdf.text(entrevistador, margin + 4, y + 12);
+
+  // Final footer
+  pdf.setFontSize(8);
+  pdf.text('Outtax Contabilidade · Roteiro de Entrevista BPO', margin + 4, 285);
+  pdf.text(`Página ${pageNum}`, W - margin - 15, 285);
+
+  // SAVE
+  const filename = `Entrevista_${nome.replace(/\s+/g, '_')}_${dataFmt.replace(/\//g, '-')}.pdf`;
+  pdf.save(filename);
+
+  btn.disabled = false;
+  btn.innerHTML = '<span>📄</span> Gerar PDF';
+
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
